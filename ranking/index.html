@@ -18,6 +18,7 @@
                         "surface": "#ffffff",
                         "text-main": "#000000",
                         "text-muted": "#4b5563",
+                        "background-light": "#ffffff"
                     },
                     fontFamily: {
                         "display": ["Space Grotesk", "sans-serif"],
@@ -74,56 +75,76 @@
 </section>
 <section class="w-full max-w-4xl mx-auto">
 <div class="flex flex-col md:flex-row items-end justify-center gap-6 md:gap-8 pb-8">
-<div class="order-2 md:order-1 flex-1 flex flex-col items-center">
-<div class="relative w-full bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center gap-4 group hover:-translate-y-1 transition-transform duration-300">
-<div class="absolute -top-4 size-10 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-600 shadow-sm border-4 border-white">2</div>
-<div class="size-24 rounded-full p-1 border-2 border-slate-200 group-hover:border-primary transition-colors flex items-center justify-center bg-slate-50">
-<span class="text-4xl font-bold text-slate-400">S</span>
+  <div class="order-2 md:order-1 flex-1 flex flex-col items-center">
+
+   <div class="relative w-full bg-white rounded-2xl p-6 border border-slate-100 flex flex-col items-center gap-4 group hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-md">
+
+      <div class="absolute -top-4 size-10 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-600 shadow-sm border-4 border-white">2</div>
+      <div class="size-24 rounded-full p-1 border-2 border-slate-200 group-hover:border-primary transition-colors flex items-center justify-center bg-slate-50">
+        <span class="text-4xl font-bold text-slate-400">S</span>
+      </div>
+
+      <div class="text-center">
+        <h3 id="p2-name" class="text-xl font-bold font-display tracking-tight"></h3>
+        <p id="p2-score" class="text-primary font-medium mt-1"></p>
+
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+        <div id="p2-bar" class="bg-primary h-2 rounded-full w-[93%]"></div>
+      </div>
+
+    </div>
+
+ 
+    <div class="hidden md:block w-full h-16 bg-gradient-to-b from-primary/10 to-transparent rounded-t-lg mt-4 border-x border-t border-primary/10"></div>
+  </div>
+
+  <div class="order-1 md:order-2 flex-1 w-full md:w-[1.2fr] z-10">
+    <div class="relative w-full bg-white rounded-2xl p-8 shadow-lg shadow-primary/20 border-2 border-primary/20 flex flex-col items-center gap-5 transform md:-translate-y-4 hover:-translate-y-5 transition-transform duration-300">
+
+      <div class="absolute -top-6">
+        <span class="material-symbols-outlined text-5xl text-[#FFD700] drop-shadow-sm">emoji_events</span>
+      </div>
+      <div class="mt-4 size-32 rounded-full p-1 border-4 border-primary shadow-lg shadow-primary/20 flex items-center justify-center bg-primary/5">
+        <span class="text-6xl font-black text-primary">A</span>
+      </div>
+
+      <div class="text-center">
+        <div class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full mb-2">Perfect Attendance</div>
+        <h3 id="p1-name" class="text-2xl font-bold font-display tracking-tight"></h3>
+
+        <p id="p1-score" class="text-4xl font-bold text-slate-900 mt-2"></p>
+
+        <p class="text-slate-500 text-sm">Days Attended</p>
+      </div>
+    </div>
+    <div class="hidden md:block w-full h-32 bg-gradient-to-b from-primary/10 to-transparent rounded-t-lg mt-4 border-x border-t border-primary/10"></div>
+  </div>
+
+  <div class="order-3 md:order-3 flex-1 flex flex-col items-center">
+    <div class="relative w-full bg-white rounded-2xl p-6 border border-slate-100 flex flex-col items-center gap-4 group hover:-translate-y-1 transition-transform duration-300 shadow-sm hover:shadow-md">
+
+      <div class="absolute -top-4 size-10 bg-[#CD7F32] rounded-full flex items-center justify-center font-bold text-white shadow-sm border-4 border-white">3</div>
+      <div class="size-24 rounded-full p-1 border-2 border-slate-200 group-hover:border-[#CD7F32] transition-colors flex items-center justify-center bg-slate-50">
+        <span class="text-4xl font-bold text-slate-400">M</span>
+      </div>
+      <div class="text-center">
+        <h3 id="p3-name" class="text-xl font-bold font-display tracking-tight"></h3>
+        <p id="p3-score" class="text-primary font-medium mt-1"></p>
+
+      </div>
+
+      <div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+        <div id="p3-bar" class="bg-primary h-2 rounded-full w-[90%] opacity-70"></div>
+      </div>
+
+    </div>
+
+    
+    <div class="hidden md:block w-full h-10 bg-gradient-to-b from-primary/10 to-transparent rounded-t-lg mt-4 border-x border-t border-primary/10"></div>
+  </div>
 </div>
-<div class="text-center">
-<h3 class="text-xl font-bold">Sarah Jones</h3>
-<p class="text-primary font-medium mt-1">29/31 days</p>
-</div>
-<div class="w-full bg-slate-100 rounded-full h-2 mt-2">
-<div class="bg-primary h-2 rounded-full w-[93%]"></div>
-</div>
-</div>
-<div class="hidden md:block w-full h-16 bg-gradient-to-b from-slate-100 to-white rounded-t-lg mt-4 opacity-50"></div>
-</div>
-<div class="order-1 md:order-2 flex-1 w-full md:w-[1.2fr] z-10">
-<div class="relative w-full bg-white rounded-2xl p-8 shadow-lg border-2 border-primary/20 flex flex-col items-center gap-5 transform md:-translate-y-4">
-<div class="absolute -top-6">
-<span class="material-symbols-outlined text-5xl text-[#FFD700] drop-shadow-sm">emoji_events</span>
-</div>
-<div class="mt-4 size-32 rounded-full p-1 border-4 border-primary shadow-lg shadow-primary/20 flex items-center justify-center bg-primary/5">
-<span class="text-6xl font-black text-primary">A</span>
-</div>
-<div class="text-center">
-<div class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full mb-2">Perfect Attendance</div>
-<h3 class="text-2xl font-black">Alex Chen</h3>
-<p class="text-4xl font-bold text-slate-900 mt-2">31/31</p>
-<p class="text-slate-500 text-sm">Days Attended</p>
-</div>
-</div>
-<div class="hidden md:block w-full h-32 bg-gradient-to-b from-primary/10 to-transparent rounded-t-lg mt-4 border-x border-t border-primary/10"></div>
-</div>
-<div class="order-3 md:order-3 flex-1 flex flex-col items-center">
-<div class="relative w-full bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center gap-4 group hover:-translate-y-1 transition-transform duration-300">
-<div class="absolute -top-4 size-10 bg-[#CD7F32] rounded-full flex items-center justify-center font-bold text-white shadow-sm border-4 border-white">3</div>
-<div class="size-24 rounded-full p-1 border-2 border-slate-200 group-hover:border-[#CD7F32] transition-colors flex items-center justify-center bg-slate-50">
-<span class="text-4xl font-bold text-slate-400">M</span>
-</div>
-<div class="text-center">
-<h3 class="text-xl font-bold">Mike Ross</h3>
-<p class="text-primary font-medium mt-1">28/31 days</p>
-</div>
-<div class="w-full bg-slate-100 rounded-full h-2 mt-2">
-<div class="bg-primary h-2 rounded-full w-[90%] opacity-70"></div>
-</div>
-</div>
-<div class="hidden md:block w-full h-10 bg-gradient-to-b from-slate-100 to-white rounded-t-lg mt-4 opacity-50"></div>
-</div>
-</div>
+
 </section>
 <section class="w-full bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 <div class="overflow-x-auto">
@@ -137,125 +158,21 @@
 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider w-32 text-center">Trend</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-100">
-<tr class="hover:bg-slate-50 transition-colors group">
-<td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#4</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div>
-<p class="font-bold text-slate-900">Emily White</p>
-<p class="text-xs text-slate-500">Computer Science '24</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-purple-100 text-purple-700 text-xs font-medium">
-<span class="material-symbols-outlined text-sm">bug_report</span> Bug Hunter
-                                </span>
-</td>
-<td class="px-6 py-4 font-mono font-medium text-slate-700">27/31</td>
-<td class="px-6 py-4 text-center">
-<div class="inline-flex items-center justify-center size-8 rounded-full bg-green-100 text-green-600">
-<span class="material-symbols-outlined text-lg">trending_up</span>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-slate-50 transition-colors group">
-<td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#5</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div>
-<p class="font-bold text-slate-900">David Lee</p>
-<p class="text-xs text-slate-500">Software Eng '25</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-100 text-blue-700 text-xs font-medium">
-<span class="material-symbols-outlined text-sm">code</span> Code Ninja
-                                </span>
-</td>
-<td class="px-6 py-4 font-mono font-medium text-slate-700">25/31</td>
-<td class="px-6 py-4 text-center">
-<div class="inline-flex items-center justify-center size-8 rounded-full bg-slate-100 text-slate-400">
-<span class="material-symbols-outlined text-lg">remove</span>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-slate-50 transition-colors group">
-<td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#6</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div>
-<p class="font-bold text-slate-900">Jessica Wu</p>
-<p class="text-xs text-slate-500">Data Science '24</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-orange-100 text-orange-700 text-xs font-medium">
-<span class="material-symbols-outlined text-sm">handshake</span> Contributor
-                                </span>
-</td>
-<td class="px-6 py-4 font-mono font-medium text-slate-700">24/31</td>
-<td class="px-6 py-4 text-center">
-<div class="inline-flex items-center justify-center size-8 rounded-full bg-green-100 text-green-600">
-<span class="material-symbols-outlined text-lg">trending_up</span>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-slate-50 transition-colors group">
-<td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#7</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div>
-<p class="font-bold text-slate-900">Tom Harris</p>
-<p class="text-xs text-slate-500">InfoSys '26</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">
-<span class="material-symbols-outlined text-sm">person</span> Member
-                                </span>
-</td>
-<td class="px-6 py-4 font-mono font-medium text-slate-700">22/31</td>
-<td class="px-6 py-4 text-center">
-<div class="inline-flex items-center justify-center size-8 rounded-full bg-red-100 text-red-600">
-<span class="material-symbols-outlined text-lg">trending_down</span>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-slate-50 transition-colors group">
-<td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#8</td>
-<td class="px-6 py-4">
-<div class="flex items-center gap-3">
-<div>
-<p class="font-bold text-slate-900">Linda Martinez</p>
-<p class="text-xs text-slate-500">Freshman '27</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-pink-100 text-pink-700 text-xs font-medium">
-<span class="material-symbols-outlined text-sm">fiber_new</span> Newbie
-                                </span>
-</td>
-<td class="px-6 py-4 font-mono font-medium text-slate-700">20/31</td>
-<td class="px-6 py-4 text-center">
-<div class="inline-flex items-center justify-center size-8 rounded-full bg-green-100 text-green-600">
-<span class="material-symbols-outlined text-lg">trending_up</span>
-</div>
-</td>
-</tr>
+<tbody id="rank-tbody" class="divide-y divide-slate-100">
 </tbody>
+
 </table>
 </div>
 <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-center">
-<button class="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-2">
-                    Show more members
-                    <span class="material-symbols-outlined text-lg">expand_more</span>
+<button id="btn-more"
+  class="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-2">
+
+  <span id="more-text">Show more members</span>
+
+  <span id="more-icon"
+    class="material-symbols-outlined text-lg">expand_more</span>
 </button>
+
 </div>
 </section>
 </main>
@@ -294,5 +211,8 @@
 </div>
 </div>
 </footer>
-
+<script src="../js/ranking.js"></script>
+<script>
+  RankingPage.init();
+</script>
 </body></html>

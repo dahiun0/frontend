@@ -38,7 +38,7 @@
 
     <!-- LEFT -->
     <div class="flex items-center gap-3 w-40">
-      <a href="../../index.html" class="text-xl font-bold tracking-tight font-display">BINARY</a>
+      <a href="../index.html" class="text-xl font-bold tracking-tight font-display">BINARY</a>
     </div>
 
     <!-- CENTER (About처럼 absolute 제거 + gap-10) -->
@@ -52,7 +52,7 @@
 
     <!-- RIGHT (About처럼 폭/정렬 고정) -->
     <div class="flex items-center justify-end gap-4 w-40">
-      <button onclick="location.href='../login.html'"
+      <button onclick="location.href='../login/index.html'"
         class="flex items-center justify-center px-6 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all shadow-md hover:shadow-lg font-body">
         Login
       </button>
@@ -125,17 +125,20 @@
             </button>
 <div id="pagination" class="flex items-center gap-2">
 </div>
-<button id="btn-next" class="text-gray-500 hover:text-black hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors flex items-center gap-1">
-                Next
-                <span class="material-symbols-outlined text-lg">chevron_right</span>
+<button id="btn-next"
+  class="text-gray-500 hover:text-black hover:bg-gray-100 px-3 py-1 rounded-md text-sm font-medium transition-colors disabled:opacity-30 flex items-center gap-1">
+  Next
+  <span class="material-symbols-outlined text-lg">chevron_right</span>
 </button>
+
+
 </div>
 </div>
 <footer class="w-full bg-white border-t border-gray-100 py-12 mt-12">
   <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
     <div class="col-span-1 md:col-span-2">
       <div class="flex items-center gap-2 mb-4">
-        <a href="../../index.html" class="font-bold tracking-tight font-display">BINARY</a>
+        <a href="../index.html" class="font-bold tracking-tight font-display">BINARY</a>
       </div>
       <p class="text-gray-500 text-sm max-w-sm mb-6">
         Empowering the next generation of technology leaders through code, community, and collaboration.
@@ -171,7 +174,7 @@
 </footer>
 
 </main>
-<script src="../../js/board.js"></script>
+<script src="../js/board.js"></script>
 <script>
   BoardPage.init();
 </script>

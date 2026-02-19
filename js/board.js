@@ -3,7 +3,7 @@ const BoardPage = (() => {
   const PAGE_SIZE = 10;
 
   async function fetchAllPosts() {
-    const res = await fetch("../../data/posts.json");
+    const res = await fetch("../data/posts.json");
     return res.json();
   }
 
