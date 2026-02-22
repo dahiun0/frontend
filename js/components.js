@@ -21,11 +21,8 @@ class AppHeader extends HTMLElement {
             <a class="nav-link text-sm font-semibold text-gray-500 hover:text-black transition-colors uppercase tracking-wide" href="/board">Board</a>
             <a class="nav-link text-sm font-semibold text-gray-500 hover:text-black transition-colors uppercase tracking-wide" href="/ranking">Ranking</a>
           </nav>
-          <div class="flex items-center justify-end gap-4 w-40">
-            <button onclick="location.href='/login'"
-              class="flex items-center justify-center px-6 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all shadow-md hover:shadow-lg font-body">
-              Login
-            </button>
+          <div class="flex items-center justify-end gap-2 md:gap-4 w-40" id="auth-container">
+            <!-- Buttons are injected via checkLoginStatus() -->
           </div>
           <button class="md:hidden text-2xl">
             <span class="material-symbols-outlined">menu</span>
@@ -35,6 +32,36 @@ class AppHeader extends HTMLElement {
     `;
 
     this.setActiveLink();
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    const authContainer = this.querySelector('#auth-container');
+    if (!authContainer) return;
+
+    // 로컬 스토리지에 'token'이 있는지 확인하여 로그인 여부 판단
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // 로그인 상태일 때 (마이페이지 및 로그아웃 버튼)
+      authContainer.innerHTML = `
+        <button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary hover:bg-primary-hover text-white text-sm font-semibold transition-all shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 font-body tracking-wide">
+          <span>MYPAGE</span>
+        </button>
+        <button onclick="localStorage.removeItem('token'); location.reload();"
+          class="flex items-center justify-center px-3 py-2 rounded-lg text-gray-500 hover:text-black text-sm font-bold transition-all font-body md:flex hidden">
+          Logout
+        </button>
+      `;
+    } else {
+      // 비로그인 상태일 때 (로그인 버튼)
+      authContainer.innerHTML = `
+        <button onclick="location.href='/login'"
+          class="flex items-center justify-center px-6 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all shadow-md hover:shadow-lg font-body">
+          Login
+        </button>
+      `;
+    }
   }
 
   setActiveLink() {
