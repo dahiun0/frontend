@@ -5,48 +5,18 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>BINARY - Reset Password</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
+  <link rel="stylesheet" href="/css/global.css" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            "primary-black": "#000000",
-            "secondary-gray": "#6b7280",
-            "border-light": "#e5e7eb",
-            "background-light": "#ffffff",
-            "sprout": "#22c55e",
-            "sprout-hover": "#16a34a"
-          },
-          fontFamily: {
-            "display": ["Space Grotesk", "sans-serif"],
-            "body": ["Inter", "sans-serif"],
-            "sans": ["Inter", "sans-serif"]
-          },
-          borderRadius: {
-            "DEFAULT": "0.25rem",
-            "lg": "0.5rem",
-            "xl": "0.75rem",
-            "full": "9999px"
-          },
-        },
-      },
-    }
-  </script>
+  <script src="/js/tailwind-config.js"></script>
   <script src="/js/components.js" defer></script>
 </head>
 
-<body class="bg-white text-black font-sans min-h-screen flex flex-col antialiased">
+<body class="min-h-screen flex flex-col selection:bg-primary selection:text-white overflow-x-hidden bg-white">
   <app-header></app-header>
   <main class="flex-grow flex items-center justify-center py-10 px-4 md:px-6 bg-white">
     <div class="w-full max-w-[480px] flex flex-col bg-white rounded-xl p-6 md:p-10 shadow-sm border border-gray-200">
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-sprout/10 text-sprout mb-4">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
           <span class="material-symbols-outlined text-[28px]">lock_reset</span>
         </div>
         <h1 class="text-black text-2xl md:text-[28px] font-bold leading-tight tracking-[-0.015em] mb-3 font-sans">
@@ -66,18 +36,18 @@
               <span class="material-symbols-outlined text-gray-400 text-[20px]">mail</span>
             </div>
             <input
-              class="form-input w-full rounded-lg text-black focus:outline-0 focus:ring-2 focus:ring-sprout/50 focus:border-sprout border border-gray-200 bg-white h-12 pl-11 pr-4 placeholder:text-gray-400 text-base font-normal transition-all font-sans"
+              class="form-input w-full rounded-lg text-black focus:outline-0 focus:ring-2 focus:ring-primary/50 focus:border-primary border border-gray-200 bg-white h-12 pl-11 pr-4 placeholder:text-gray-400 text-base font-normal transition-all font-sans"
               id="email" name="email" placeholder="student@university.edu" required="" type="email" />
           </div>
         </div>
         <button
-          class="w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-sprout hover:bg-sprout-hover active:scale-[0.98] transition-all text-white text-base font-bold leading-normal tracking-[0.015em] shadow-md shadow-sprout/20 mt-2 font-sans"
+          class="w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary hover:bg-primary-hover active:scale-[0.98] transition-all text-white text-base font-bold leading-normal tracking-[0.015em] shadow-md shadow-primary/20 mt-2 font-sans"
           type="submit">
           Send Reset Link
         </button>
       </form>
       <div class="mt-8 text-center pt-6 border-t border-gray-100">
-        <a class="inline-flex items-center gap-2 text-black hover:text-sprout transition-colors text-sm font-medium group font-sans"
+        <a class="inline-flex items-center gap-2 text-black hover:text-primary transition-colors text-sm font-medium group font-sans"
           href="/login">
           <span
             class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>

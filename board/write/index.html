@@ -1,41 +1,16 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>BINARY Refined Post Editor</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#000000",
-                        "background-light": "#ffffff",
-                        "border-subtle": "#f3f4f6",
-                        "text-placeholder": "#9ca3af",
-                    },
-                    fontFamily: {
-                        "sans": ["Inter", "sans-serif"],
-                        "serif": ["Lora", "serif"],
-                        "display": ["Space Grotesk", "Inter", "sans-serif"],
-                    },
-                    boxShadow: {
-                        "subtle": "0 2px 10px rgba(0, 0, 0, 0.03)",
-                        "paper": "0 0 40px rgba(0, 0, 0, 0.02)",
-                    }
-                },
-            },
-        }
-    </script>
-<style type="text/tailwindcss">
-        .formatting-btn {
+<html class="light" lang="ko">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>BINARY Refined Post Editor</title>
+  <link rel="stylesheet" href="/css/global.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/tailwind-config.js"></script>
+  <script src="/js/component.js"></script>
+  <style type="text/tailwindcss">
+    .formatting-btn {
             @apply p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded transition-all duration-200 flex items-center justify-center;
         }
         .formatting-btn.active {
@@ -65,70 +40,36 @@
         }
     </style>
 </head>
-<body class="bg-background-light font-sans text-slate-900 antialiased min-h-screen flex flex-col overflow-hidden selection:bg-gray-200">
-<header class="w-full bg-white/90 backdrop-blur-sm border-b border-border-subtle sticky top-0 z-50 h-[72px] flex-none transition-shadow duration-300">
-<div class="w-full px-6 md:px-10 lg:px-12 h-full flex items-center justify-between max-w-[1400px] mx-auto">
-<div class="flex items-center flex-none">
-<a href="../index.html"
-   class="font-display text-[18px] md:text-[20px] font-extrabold tracking-tight text-slate-900 hover:opacity-70 transition-opacity">
-  BINARY
-</a>
-</div>
-<div class="hidden md:flex items-center justify-center flex-grow px-4">
-<div class="flex items-center bg-white border border-gray-100 shadow-subtle rounded-full px-4 py-1.5 gap-1">
-<button class="formatting-btn group relative" title="Upload Image">
-<span class="material-symbols-outlined">add_photo_alternate</span>
-</button>
-<div class="separator"></div>
-<div class="relative group">
-<select class="appearance-none bg-transparent border-none text-sm font-medium text-gray-600 hover:text-gray-900 cursor-pointer focus:ring-0 py-1 pl-2 pr-6">
-<option>Paragraph</option>
-<option>Heading 1</option>
-<option>Heading 2</option>
-<option>Quote</option>
-</select>
-<span class="material-symbols-outlined absolute right-0 top-1.5 pointer-events-none text-gray-400 !text-[16px]">expand_more</span>
-</div>
-<div class="separator"></div>
-<button class="formatting-btn font-bold font-serif" title="Bold">B</button>
-<button class="formatting-btn italic font-serif" title="Italic">I</button>
-<button class="formatting-btn" title="Underline"><span class="material-symbols-outlined">format_underlined</span></button>
-<div class="separator"></div>
-<button class="formatting-btn" title="Align Left"><span class="material-symbols-outlined">format_align_left</span></button>
-<button class="formatting-btn" title="Align Center"><span class="material-symbols-outlined">format_align_center</span></button>
-<div class="separator hidden lg:block"></div>
-<div class="hidden lg:flex items-center gap-1">
-<button class="formatting-btn" title="Bullet List"><span class="material-symbols-outlined">format_list_bulleted</span></button>
-<button class="formatting-btn" title="Numbered List"><span class="material-symbols-outlined">format_list_numbered</span></button>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-4 flex-none">
-<div class="hidden sm:block text-xs text-gray-400 font-medium">Saved</div>
-<button class="bg-black hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all text-white text-sm font-medium h-9 px-5 rounded-full shadow-lg shadow-gray-200">
-                    Publish
-                </button>
-</div>
-</div>
-</header>
-<main class="flex-grow flex bg-[#fafafa] overflow-hidden relative w-full h-full justify-center">
-<div class="w-full h-full flex flex-col items-center overflow-y-auto pt-10 pb-20 px-4">
-<div class="bg-white w-full max-w-[800px] min-h-[80vh] shadow-paper rounded-sm p-12 md:p-16 flex flex-col transition-all">
-<input autofocus="" class="w-full text-4xl md:text-5xl font-bold text-gray-900 placeholder:text-gray-200 border-none focus:ring-0 focus:outline-none p-0 mb-6 bg-transparent tracking-tight font-sans" placeholder="Title" type="text"/>
-<div class="w-full h-px bg-gray-100 mb-8"></div>
-<textarea class="w-full flex-grow resize-none text-lg md:text-xl text-gray-700 font-serif placeholder:text-gray-300/80 placeholder:font-sans border-none focus:ring-0 focus:outline-none p-0 bg-transparent leading-relaxed" placeholder="Start your story..."></textarea>
-</div>
-<div class="mt-8 text-xs text-gray-400 font-sans">
-                Type / for commands
-            </div>
-</div>
-</main>
-<div class="bg-white/95 backdrop-blur border-t border-border-subtle py-3 px-6 flex justify-around items-center md:hidden fixed bottom-0 w-full z-40 safe-area-pb">
-<button class="formatting-btn active"><span class="material-symbols-outlined">format_bold</span></button>
-<button class="formatting-btn"><span class="material-symbols-outlined">format_italic</span></button>
-<button class="formatting-btn"><span class="material-symbols-outlined">add_photo_alternate</span></button>
-<button class="formatting-btn"><span class="material-symbols-outlined">format_list_bulleted</span></button>
-<button class="formatting-btn"><span class="material-symbols-outlined">keyboard_hide</span></button>
-</div>
-<app-footer></app-footer>
-</body></html>
+
+<body
+  class="bg-background-light font-sans text-slate-900 antialiased min-h-screen flex flex-col overflow-hidden selection:bg-gray-200">
+  <app-header></app-header>
+  <main class="flex-grow flex bg-[#fafafa] overflow-hidden relative w-full h-full justify-center">
+    <div class="w-full h-full flex flex-col items-center overflow-y-auto pt-10 pb-20 px-4">
+      <div
+        class="bg-white w-full max-w-[800px] min-h-[80vh] shadow-paper rounded-sm p-12 md:p-16 flex flex-col transition-all">
+        <input autofocus=""
+          class="w-full text-4xl md:text-5xl font-bold text-gray-900 placeholder:text-gray-200 border-none focus:ring-0 focus:outline-none p-0 mb-6 bg-transparent tracking-tight font-sans"
+          placeholder="Title" type="text" />
+        <div class="w-full h-px bg-gray-100 mb-8"></div>
+        <textarea
+          class="w-full flex-grow resize-none text-lg md:text-xl text-gray-700 font-serif placeholder:text-gray-300/80 placeholder:font-sans border-none focus:ring-0 focus:outline-none p-0 bg-transparent leading-relaxed"
+          placeholder="Start your story..."></textarea>
+      </div>
+      <div class="mt-8 text-xs text-gray-400 font-sans">
+        Type / for commands
+      </div>
+    </div>
+  </main>
+  <div
+    class="bg-white/95 backdrop-blur border-t border-border-subtle py-3 px-6 flex justify-around items-center md:hidden fixed bottom-0 w-full z-40 safe-area-pb">
+    <button class="formatting-btn active"><span class="material-symbols-outlined">format_bold</span></button>
+    <button class="formatting-btn"><span class="material-symbols-outlined">format_italic</span></button>
+    <button class="formatting-btn"><span class="material-symbols-outlined">add_photo_alternate</span></button>
+    <button class="formatting-btn"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+    <button class="formatting-btn"><span class="material-symbols-outlined">keyboard_hide</span></button>
+  </div>
+  <app-footer></app-footer>
+</body>
+
+</html>
