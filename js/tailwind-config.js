@@ -10,9 +10,10 @@ window.tailwind.config = {
                 "background-light": "#ffffff",
             },
             fontFamily: {
-                "display": ["Space Grotesk", "sans-serif"],
-                "body": ["Inter", "sans-serif"],
-                "sans": ["Inter", "sans-serif"]
+                "display": ["Space Grotesk", "Pretendard", "sans-serif"],
+                "body": ["Pretendard", "Inter", "sans-serif"],
+                "sans": ["Pretendard", "Inter", "sans-serif"],
+                "mono": ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
             },
             borderRadius: {
                 "DEFAULT": "0.25rem",
