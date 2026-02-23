@@ -1,8 +1,8 @@
 {
   "items": [
-    { "rank": 1, "name": "Alex Chen",     "tier": "Diamond I", "participation": "31/31", "streak": "31 Days" },
-    { "rank": 2, "name": "Sarah Jones",   "tier": "Gold II",   "participation": "29/31", "streak": "14 Days" },
-    { "rank": 3, "name": "Mike Ross",     "tier": "Silver III","participation": "28/31", "streak": "8 Days" },
+    { "rank": 1, "name": "이다흰",     "tier": "Diamond I", "participation": "31/31", "streak": "31 Days" },
+    { "rank": 2, "name": "황예인",   "tier": "Gold II",   "participation": "29/31", "streak": "14 Days" },
+    { "rank": 3, "name": "태수공듀",     "tier": "Silver III","participation": "28/31", "streak": "8 Days" },
 
     { "rank": 4, "name": "Emily White",   "tier": "Silver I",  "participation": "27/31", "streak": "12 Days" },
     { "rank": 5, "name": "David Lee",     "tier": "Bronze I",  "participation": "25/31", "streak": "5 Days" },
@@ -13,6 +13,6 @@
     { "rank": 9,  "name": "Kevin Park",   "tier": "Silver II", "participation": "19/31", "streak": "2 Days" },
     { "rank": 10, "name": "Ava Kim",      "tier": "Bronze V",  "participation": "18/31", "streak": "1 Day" },
     { "rank": 11, "name": "Noah Choi",    "tier": "Bronze VI", "participation": "16/31", "streak": "0 Days" },
-    { "rank": 12, "name": "Mina Lee",     "tier": "Silver III","participation": "15/31", "streak": "4 Days" }
+    { "rank": 12, "name": "이현규",     "tier": "Silver III","participation": "1/31", "streak": "1 Days" }
   ]
 }
