@@ -178,9 +178,9 @@ const BoardPage = (() => {
       const val = (btn.dataset.filter || "all").toLowerCase();
       const isActive = val === state.category;
 
-      btn.classList.toggle("bg-black", isActive);
+      btn.classList.toggle("bg-primary", isActive);
       btn.classList.toggle("text-white", isActive);
-      btn.classList.toggle("border-black", isActive);
+      btn.classList.toggle("border-primary", isActive);
 
       btn.classList.toggle("bg-white", !isActive);
       btn.classList.toggle("text-gray-600", !isActive);
