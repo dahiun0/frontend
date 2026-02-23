@@ -6,7 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 body {
-    font-family: "Pretendard", "Inter", sans-serif;
+    font-family: "Inter", "Pretendard", sans-serif;
 }
 
 h1,
@@ -14,9 +14,9 @@ h2,
 h3,
 h4,
 .font-display {
-    font-family: "Space Grotesk", "Pretendard", sans-serif;
+    font-family: "Inter", "Space Grotesk", "Pretendard", sans-serif;
 }
 
 .font-mono {
-    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: "Inter", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
