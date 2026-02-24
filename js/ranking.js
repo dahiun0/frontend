@@ -1,6 +1,6 @@
 // frontend/js/ranking.js
 const RankingPage = (() => {
-  const INITIAL_SHOW = 10; // 처음에 몇 명 보여줄지 (원하면 5→8 이런 식으로)
+  const INITIAL_SHOW = 10; // 처음에 몇 명 보여줄지
 
   let all = [];
   let expanded = false;
@@ -10,9 +10,16 @@ const RankingPage = (() => {
     const res = await fetch("../data/ranking.json");
     return res.json();
   }
+function setCurrentMonth() {
+  const el = document.getElementById("current-month");
+  if (!el) return;
 
+  const now = new Date();
+  const options = { year: "numeric", month: "long" };
+  el.textContent = now.toLocaleDateString("en-US", options);
+}
   function escapeHTML(s) {
-    return String(s)
+    return String(s ?? "")
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -20,191 +27,204 @@ const RankingPage = (() => {
       .replaceAll("'", "&#039;");
   }
 
-  // 배지 1개 기준 (데이터에 여러 개면 여러 개 렌더링 가능)
-  function badge(b) {
-    if (!b) return "";
-    const icon = escapeHTML(b.icon || "person");
-    const label = escapeHTML(b.label || "Member");
-    const color = (b.color || "slate").toLowerCase();
-
-    const colorMap = {
-      purple: "bg-purple-100 text-purple-700",
-      blue: "bg-blue-100 text-blue-700",
-      orange: "bg-orange-100 text-orange-700",
-      pink: "bg-pink-100 text-pink-700",
-      green: "bg-green-100 text-green-700",
-      red: "bg-red-100 text-red-700",
-      slate: "bg-slate-100 text-slate-600",
-    };
-
-    const cls = colorMap[color] || colorMap.slate;
-
-    return `
-      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md ${cls} text-xs font-medium">
-        <span class="material-symbols-outlined text-sm">${icon}</span> ${label}
-      </span>
-    `;
-  }
-
-  function trendIcon(trend) {
-    const t = (trend || "flat").toLowerCase();
-    if (t === "up") {
-      return `
-        <div class="inline-flex items-center justify-center size-8 rounded-full bg-green-100 text-green-600">
-          <span class="material-symbols-outlined text-lg">trending_up</span>
-        </div>
-      `;
-    }
-    if (t === "down") {
-      return `
-        <div class="inline-flex items-center justify-center size-8 rounded-full bg-red-100 text-red-600">
-          <span class="material-symbols-outlined text-lg">trending_down</span>
-        </div>
-      `;
-    }
-    return `
-      <div class="inline-flex items-center justify-center size-8 rounded-full bg-slate-100 text-slate-400">
-        <span class="material-symbols-outlined text-lg">remove</span>
-      </div>
-    `;
-  }
-
-  function renderRows(list) {
-    const tbody = document.getElementById("rank-tbody");
-    if (!tbody) return;
-
-    tbody.innerHTML = list.map((m) => `
-      <tr class="hover:bg-slate-50 transition-colors group">
-        <td class="px-6 py-4 font-bold text-slate-400 group-hover:text-primary">#${escapeHTML(m.rank)}</td>
-        <td class="px-6 py-4">
-          <div class="flex items-center gap-3">
-            <div>
-              <p class="font-bold text-slate-900">${escapeHTML(m.name)}</p>
-              <p class="text-xs text-slate-500">${escapeHTML(m.sub || "")}</p>
-            </div>
-          </div>
-        </td>
-        <td class="px-6 py-4">
-          ${badge(m.badge)}
-        </td>
-        <td class="px-6 py-4 font-mono font-medium text-slate-700">${escapeHTML(m.participation)}</td>
-        <td class="px-6 py-4 text-center">
-          ${trendIcon(m.trend)}
-        </td>
-      </tr>
-    `).join("");
-  }
-  // ===== Podium (Top 1/2/3) helpers =====
   function setText(id, text) {
     const el = document.getElementById(id);
-    if (el) el.textContent = text;
+    if (el) el.textContent = text ?? "";
   }
 
-  function parsePercent(participation) {
-    // "29/31" 또는 "29/31 days" 같은 문자열에서 퍼센트 계산
-    const s = String(participation || "");
-    const m = s.match(/(\d+)\s*\/\s*(\d+)/);
-    if (!m) return 0;
+  function parseAttend(s) {
+    // "29/31" or "29/31 days" 등에서 29, 31 추출
+    const str = String(s ?? "");
+    const m = str.match(/(\d+)\s*\/\s*(\d+)/);
+    if (!m) return { a: 0, b: 0, pct: 0 };
     const a = parseInt(m[1], 10);
     const b = parseInt(m[2], 10);
-    if (!b) return 0;
-    return Math.round((a / b) * 100);
+    const pct = b ? Math.round((a / b) * 100) : 0;
+    return { a, b, pct };
   }
 
   function setBar(id, percent) {
     const el = document.getElementById(id);
     if (!el) return;
-    const p = Math.max(0, Math.min(100, percent));
+    const p = Math.max(0, Math.min(100, percent || 0));
     el.style.width = `${p}%`;
   }
 
+  function guessTier(member) {
+    // 데이터에서 tier가 없을 수도 있어서 최대한 안전하게 추정
+    // 우선순위: member.tier > badge.label > member.badgeLabel > ""
+    if (member?.tier) return String(member.tier);
+    if (member?.badge?.label) return String(member.badge.label);
+    if (member?.badgeLabel) return String(member.badgeLabel);
+    return "";
+  }
+
+  function tierMeta(tierText) {
+    const t = String(tierText || "").toLowerCase();
+
+    // 카드 리스트 쪽 작은 마름모 색 + 텍스트 색 맞추기
+    if (t.includes("diamond")) {
+      return { dot: "bg-primary", text: "text-slate-700", tierLabel: tierText || "Diamond" };
+    }
+    if (t.includes("gold")) {
+      return { dot: "bg-tier-gold", text: "text-slate-700", tierLabel: tierText || "Gold" };
+    }
+    if (t.includes("silver")) {
+      return { dot: "bg-tier-silver", text: "text-slate-700", tierLabel: tierText || "Silver" };
+    }
+    if (t.includes("bronze")) {
+      return { dot: "bg-tier-bronze", text: "text-slate-700", tierLabel: tierText || "Bronze" };
+    }
+    return { dot: "bg-slate-300", text: "text-slate-700", tierLabel: tierText || "Member" };
+  }
+
+  function guessStreak(member) {
+    // streak 필드가 있으면 그걸 쓰고, 없으면 sub에서 숫자/Days 같은 걸 최대한 살림
+    if (member?.streak != null && String(member.streak).trim() !== "") return String(member.streak);
+    if (member?.sub != null && String(member.sub).toLowerCase().includes("day")) return String(member.sub);
+    // 혹시 "14" 숫자만 오는 경우도 대비
+    if (typeof member?.sub === "number") return `${member.sub} Days`;
+    return "—";
+  }
+
+  // ===== Podium =====
   function renderPodium() {
-    // all[0]=1등, all[1]=2등, all[2]=3등 (정렬된 상태라고 가정)
     if (!all || all.length < 3) return;
 
     const first = all[0];
     const second = all[1];
     const third = all[2];
 
-   setText("p1-name", first.name);
-  setText("p1-score", first.participation);
+    // 이름
+    setText("p1-name", first?.name || "—");
+    setText("p2-name", second?.name || "—");
+    setText("p3-name", third?.name || "—");
 
-  setText("p2-name", second.name);
-  setText("p2-score", `${second.participation} days`);
-  setBar("p2-bar", parsePercent(second.participation));
+    // tier
+    setText("p1-tier", guessTier(first) || "Diamond I");
+    setText("p2-tier", guessTier(second) || "Gold II");
+    setText("p3-tier", guessTier(third) || "Silver III");
 
-  setText("p3-name", third.name);
-  setText("p3-score", `${third.participation} days`);
-  setBar("p3-bar", parsePercent(third.participation));
+    // attendance = participation 사용(네 JSON 구조를 그대로 존중)
+    const a1 = parseAttend(first?.participation);
+    const a2 = parseAttend(second?.participation);
+    const a3 = parseAttend(third?.participation);
 
+    setText("p1-attend", a1.a);
+    setText("p1-total", `/${a1.b}`);
+    setBar("p1-bar", a1.pct);
 
-  setText("p1-initial", (first.name || "").trim().charAt(0).toUpperCase());
-  setText("p2-initial", (second.name || "").trim().charAt(0).toUpperCase());
-  setText("p3-initial", (third.name || "").trim().charAt(0).toUpperCase());
+    setText("p2-attend", a2.a);
+    setText("p2-total", `/${a2.b}`);
+    setBar("p2-bar", a2.pct);
+
+    setText("p3-attend", a3.a);
+    setText("p3-total", `/${a3.b}`);
+    setBar("p3-bar", a3.pct);
+
+    // streak
+    setText("p1-streak", guessStreak(first));
+    setText("p2-streak", guessStreak(second));
+    setText("p3-streak", guessStreak(third));
   }
-  
 
-function updateMoreButton() {
+  // ===== List Cards (사진 디자인 그대로) =====
+  function renderCards(list) {
+    const wrap = document.getElementById("rank-list");
+    if (!wrap) return;
+
+    wrap.innerHTML = list.map((m) => {
+      const tier = guessTier(m);
+      const meta = tierMeta(tier);
+      const attend = parseAttend(m?.participation);
+      const streak = guessStreak(m);
+
+      const rank = escapeHTML(m?.rank);
+      const name = escapeHTML(m?.name);
+
+      return `
+        <div class="glass-card glass-card-hover rounded-xl p-4 flex flex-col md:grid md:grid-cols-12 gap-4 items-center transition-all duration-300 group">
+          <div class="col-span-1 flex justify-center">
+            <span class="font-bold text-lg text-slate-400 group-hover:text-primary transition-colors">#${rank}</span>
+          </div>
+
+          <div class="col-span-3 w-full text-center md:text-left pl-0 md:pl-2">
+            <span class="text-lg font-bold text-slate-900">${name}</span>
+          </div>
+
+          <div class="col-span-2 flex justify-center">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-100 rounded-lg shadow-sm">
+              <div class="w-3 h-3 ${meta.dot} rotate-45"></div>
+              <span class="text-xs font-bold ${meta.text}">${escapeHTML(meta.tierLabel)}</span>
+            </div>
+          </div>
+
+          <div class="col-span-3 w-full flex flex-col items-center justify-center">
+            <div class="flex items-baseline gap-1">
+              <span class="font-mono text-xl font-bold text-slate-800">${attend.a}</span>
+              <span class="text-sm text-slate-400">/${attend.b}</span>
+            </div>
+          </div>
+
+          <div class="col-span-3 w-full flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined ${streak === "—" || String(streak).includes("0") ? "text-slate-300" : "text-orange-400"}">local_fire_department</span>
+            <span class="text-lg font-bold ${streak === "—" || String(streak).includes("0") ? "text-slate-400" : "text-slate-700"}">${escapeHTML(streak)}</span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function updateMoreButton() {
+    const btn = document.getElementById("btn-more");
     const text = document.getElementById("more-text");
-  const btn = document.getElementById("btn-more");
-  const icon = document.getElementById("more-icon");
-  if (!btn) return;
+    const icon = document.getElementById("more-icon");
+    if (!btn) return;
 
-  // ✅ 전체 멤버 10명 이하면 버튼 없음
-  if (all.length <= INITIAL_SHOW) {
-    btn.style.display = "none";
-    return;
+    // 전체 멤버 10명 이하면 버튼 없음(원래 네 로직 유지)
+    if (all.length <= INITIAL_SHOW) {
+      btn.style.display = "none";
+      return;
+    }
+
+    btn.style.display = "inline-flex";
+
+    if (expanded) {
+      if (text) text.textContent = "Show less";
+      if (icon) icon.textContent = "expand_less";
+    } else {
+      if (text) text.textContent = "Show more members";
+      if (icon) icon.textContent = "expand_more";
+    }
   }
 
-  btn.style.display = "inline-flex";
+  function applyView() {
+    const rest = all.slice(3); // 4등부터 카드 리스트
+    if (all.length <= INITIAL_SHOW) expanded = true;
 
-  // ✅ 펼침/접힘에 따라 문구 + 아이콘 변경
- if (expanded) {
-  if (text) text.textContent = "Show less";
-  if (icon) icon.textContent = "expand_less";
-} else {
-  if (text) text.textContent = "Show more members";
-  if (icon) icon.textContent = "expand_more";
-}
-}
-
-
-
-function applyView() {
-  const rest = all.slice(3); // 4등부터 테이블
-  const total = rest.length;
-
-  // ✅ 전체 멤버가 10명 이하이면(= all.length <= 10) 버튼 없이 전부 표시
-  if (all.length <= INITIAL_SHOW) {
-    expanded = true; // 전체보기로 강제
+    const list = expanded ? rest : rest.slice(0, INITIAL_SHOW - 3); // 처음엔 4~10등만(7명)
+    renderCards(list);
+    updateMoreButton();
   }
-
-  const list = expanded ? rest : rest.slice(0, INITIAL_SHOW - 3); 
-  // INITIAL_SHOW=10이면 처음에 4~10등(7명)만 보이게 됨
-
-  renderRows(list);
-  updateMoreButton();
-}
-
-
-
 
   async function init() {
+    setCurrentMonth();
+    
     const data = await fetchRanking();
     all = (data.items || []).slice();
 
-    // rank 오름차순 정렬 (원하면 다른 기준 가능)
+    // rank 오름차순 정렬
     all.sort((a, b) => (a.rank || 9999) - (b.rank || 9999));
+
     renderPodium();
 
     const btn = document.getElementById("btn-more");
     if (btn) {
-     btn.addEventListener("click", () => {
-  expanded = !expanded;   // ✅ 토글
-  applyView();
-});
-
-}
+      btn.addEventListener("click", () => {
+        expanded = !expanded;
+        applyView();
+      });
+    }
 
     applyView();
   }
