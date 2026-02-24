@@ -1,15 +1,81 @@
-// frontend/js/ranking.js
+const API_BASE = "https://backend-production-5853.up.railway.app"
 const RankingPage = (() => {
-  const INITIAL_SHOW = 10; // 처음에 몇 명 보여줄지
+  const INITIAL_SHOW = 10;
 
   let all = [];
   let expanded = false;
 
-  async function fetchRanking() {
-    // ranking/index.html 기준: ../data/ranking.json
-    const res = await fetch("../data/ranking.json");
-    return res.json();
-  }
+function getDaysInCurrentMonth() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+}
+
+const TIER_MAP = {
+  0: "Unrated",
+  1: "Bronze V",
+  2: "Bronze IV",
+  3: "Bronze III",
+  4: "Bronze II",
+  5: "Bronze I",
+  6: "Silver V",
+  7: "Silver IV",
+  8: "Silver III",
+  9: "Silver II",
+  10: "Silver I",
+  11: "Gold V",
+  12: "Gold IV",
+  13: "Gold III",
+  14: "Gold II",
+  15: "Gold I",
+  16: "Platinum V",
+  17: "Platinum IV",
+  18: "Platinum III",
+  19: "Platinum II",
+  20: "Platinum I",
+  21: "Diamond V",
+  22: "Diamond IV",
+  23: "Diamond III",
+  24: "Diamond II",
+  25: "Diamond I",
+  26: "Ruby V",
+  27: "Ruby IV",
+  28: "Ruby III",
+  29: "Ruby II",
+  30: "Ruby I",
+  31: "Master"
+};
+
+function tierToText(tierNum) {
+  const n = Number(tierNum);
+  return TIER_MAP[n] || "Unrated";
+}
+
+async function fetchRanking() {
+  const res = await fetch(`${API_BASE}/api/v1/grass/ranking?year=2026&month=2`);
+  if (!res.ok) throw new Error("랭킹 API 실패: " + res.status);
+
+  const arr = await res.json(); // ✅ 백엔드가 배열로 줌
+  const totalDays = getDaysInCurrentMonth();
+
+  // ✅ 프론트가 원하는 구조로 변환
+  const items = arr.map((u, idx) => {
+    const attend = Number(u.attendance || 0);
+    const streak = Number(u.streak || 0);
+
+    return {
+      user_id: u.user_id,
+      rank: idx + 1, // ✅ 배열 순서대로 1,2,3... 매김
+      name: u.name,
+      tier: tierToText(u.tier), // ✅ 숫자 → 텍스트
+      originalTier: Number(u.tier), 
+      participation: `${attend}/${totalDays}`, // ✅ 자동으로 뒤 날짜 붙임
+      streak:`${streak} Days` , // ✅ 0이면 — 처리
+      baekjoon_id: u.baekjoon_id,
+    };
+  });
+
+  return { items }; // ✅ 기존 코드가 data.items 쓰니까 맞춰줌
+}
 function setCurrentMonth() {
   const el = document.getElementById("current-month");
   if (!el) return;
@@ -18,6 +84,7 @@ function setCurrentMonth() {
   const options = { year: "numeric", month: "long" };
   el.textContent = now.toLocaleDateString("en-US", options);
 }
+
   function escapeHTML(s) {
     return String(s ?? "")
       .replaceAll("&", "&amp;")
@@ -33,14 +100,16 @@ function setCurrentMonth() {
   }
 
   function parseAttend(s) {
-    // "29/31" or "29/31 days" 등에서 29, 31 추출
     const str = String(s ?? "");
-    const m = str.match(/(\d+)\s*\/\s*(\d+)/);
-    if (!m) return { a: 0, b: 0, pct: 0 };
-    const a = parseInt(m[1], 10);
-    const b = parseInt(m[2], 10);
-    const pct = b ? Math.round((a / b) * 100) : 0;
-    return { a, b, pct };
+
+  // 앞 숫자만 추출
+  const m = str.match(/(\d+)/);
+  const a = m ? parseInt(m[1], 10) : 0;
+
+  const total = getDaysInCurrentMonth(); 
+  const pct = total ? Math.round((a / total) * 100) : 0;
+
+  return { a, b: total, pct };
   }
 
   function setBar(id, percent) {
@@ -51,8 +120,6 @@ function setCurrentMonth() {
   }
 
   function guessTier(member) {
-    // 데이터에서 tier가 없을 수도 있어서 최대한 안전하게 추정
-    // 우선순위: member.tier > badge.label > member.badgeLabel > ""
     if (member?.tier) return String(member.tier);
     if (member?.badge?.label) return String(member.badge.label);
     if (member?.badgeLabel) return String(member.badgeLabel);
@@ -62,7 +129,7 @@ function setCurrentMonth() {
   function tierMeta(tierText) {
     const t = String(tierText || "").toLowerCase();
 
-    // 카드 리스트 쪽 작은 마름모 색 + 텍스트 색 맞추기
+
     if (t.includes("diamond")) {
       return { dot: "bg-primary", text: "text-slate-700", tierLabel: tierText || "Diamond" };
     }
@@ -75,60 +142,113 @@ function setCurrentMonth() {
     if (t.includes("bronze")) {
       return { dot: "bg-tier-bronze", text: "text-slate-700", tierLabel: tierText || "Bronze" };
     }
+    if (t.includes("platinum")) {
+  return { dot: "bg-cyan-500", text: "text-slate-700", tierLabel: tierText };
+}
+if (t.includes("ruby")) {
+  return { dot: "bg-red-500", text: "text-slate-700", tierLabel: tierText };
+}
+if (t.includes("master")) {
+  return { dot: "bg-purple-600", text: "text-slate-700", tierLabel: tierText };
+}
     return { dot: "bg-slate-300", text: "text-slate-700", tierLabel: tierText || "Member" };
   }
 
   function guessStreak(member) {
-    // streak 필드가 있으면 그걸 쓰고, 없으면 sub에서 숫자/Days 같은 걸 최대한 살림
+   
     if (member?.streak != null && String(member.streak).trim() !== "") return String(member.streak);
     if (member?.sub != null && String(member.sub).toLowerCase().includes("day")) return String(member.sub);
-    // 혹시 "14" 숫자만 오는 경우도 대비
+   
     if (typeof member?.sub === "number") return `${member.sub} Days`;
     return "—";
   }
 
-  // ===== Podium =====
-  function renderPodium() {
-    if (!all || all.length < 3) return;
+ function badgeGradientByTier(tierText) {
+  const t = tierText.toLowerCase();
 
-    const first = all[0];
-    const second = all[1];
-    const third = all[2];
+  if (t.includes("diamond")) return "bg-gradient-to-br from-cyan-400 to-cyan-600";
+  if (t.includes("platinum")) return "bg-gradient-to-br from-sky-400 to-sky-600";
+  if (t.includes("gold")) return "bg-gradient-to-br from-yellow-400 to-yellow-600";
+  if (t.includes("silver")) return "bg-gradient-to-br from-slate-400 to-slate-600";
+  if (t.includes("bronze")) return "bg-gradient-to-br from-orange-400 to-orange-600";
+  if (t.includes("ruby")) return "bg-gradient-to-br from-red-400 to-red-600";
+  if (t.includes("master")) return "bg-gradient-to-br from-purple-500 to-purple-700";
 
-    // 이름
-    setText("p1-name", first?.name || "—");
-    setText("p2-name", second?.name || "—");
-    setText("p3-name", third?.name || "—");
+  return "bg-gradient-to-br from-gray-400 to-gray-600";
+}
+function tierLevelRoman(tierText) {
+  const t = String(tierText || "").trim();
+  const m = t.match(/\b(I|II|III|IV|V)\b$/);
+  if (!m) return ""; // Unrated, Master 등
+  return m[1];       // ✅ 로마숫자 그대로
+}
+ function renderPodium() {
+  if (!all || all.length < 3) return;
 
-    // tier
-    setText("p1-tier", guessTier(first) || "Diamond I");
-    setText("p2-tier", guessTier(second) || "Gold II");
-    setText("p3-tier", guessTier(third) || "Silver III");
 
-    // attendance = participation 사용(네 JSON 구조를 그대로 존중)
-    const a1 = parseAttend(first?.participation);
-    const a2 = parseAttend(second?.participation);
-    const a3 = parseAttend(third?.participation);
+  const first = all[0];
+  const second = all[1];
+  const third = all[2];
 
-    setText("p1-attend", a1.a);
-    setText("p1-total", `/${a1.b}`);
-    setBar("p1-bar", a1.pct);
+  // 이름
+  setText("p1-name", first?.name || "—");
+  setText("p2-name", second?.name || "—");
+  setText("p3-name", third?.name || "—");
 
-    setText("p2-attend", a2.a);
-    setText("p2-total", `/${a2.b}`);
-    setBar("p2-bar", a2.pct);
+  // ✅ tier 메타 가져오기
+  const m1 = tierMeta(guessTier(first));
+  const m2 = tierMeta(guessTier(second));
+  const m3 = tierMeta(guessTier(third));
 
-    setText("p3-attend", a3.a);
-    setText("p3-total", `/${a3.b}`);
-    setBar("p3-bar", a3.pct);
+  // 텍스트 변경
+  setText("p1-tier", m1.tierLabel);
+  setText("p2-tier", m2.tierLabel);
+  setText("p3-tier", m3.tierLabel);
 
-    // streak
-    setText("p1-streak", guessStreak(first));
-    setText("p2-streak", guessStreak(second));
-    setText("p3-streak", guessStreak(third));
-  }
+  // ✅ 색상 변경 (클래스 교체)
+  const p1 = document.getElementById("p1-tier");
+  const p2 = document.getElementById("p2-tier");
+  const p3 = document.getElementById("p3-tier");
 
-  // ===== List Cards (사진 디자인 그대로) =====
+setText("p1-rank", tierLevelRoman(first?.tier));
+setText("p2-rank", tierLevelRoman(second?.tier));
+setText("p3-rank", tierLevelRoman(third?.tier));
+
+  if (p1) p1.className = `text-sm font-black uppercase tracking-widest mt-1 ${m1.text}`;
+  if (p2) p2.className = `text-xs font-bold uppercase tracking-wider mt-1 ${m2.text}`;
+  if (p3) p3.className = `text-xs font-bold uppercase tracking-wider mt-1 ${m3.text}`;
+
+  // ===== 육각형 배지 색 변경 =====
+const b1 = document.getElementById("p1-badge");
+const b2 = document.getElementById("p2-badge");
+const b3 = document.getElementById("p3-badge");
+
+if (b1) b1.className = `badge-polygon badge-polygon-lg shadow-xl flex items-center justify-center ${badgeGradientByTier(m1.tierLabel)}`;
+if (b2) b2.className = `badge-polygon shadow-lg flex items-center justify-center ${badgeGradientByTier(m2.tierLabel)}`;
+if (b3) b3.className = `badge-polygon shadow-lg flex items-center justify-center ${badgeGradientByTier(m3.tierLabel)}`;
+
+  // attendance
+  const a1 = parseAttend(first?.participation);
+  const a2 = parseAttend(second?.participation);
+  const a3 = parseAttend(third?.participation);
+
+  setText("p1-attend", a1.a);
+  setText("p1-total", `/${a1.b}`);
+  setBar("p1-bar", a1.pct);
+
+  setText("p2-attend", a2.a);
+  setText("p2-total", `/${a2.b}`);
+  setBar("p2-bar", a2.pct);
+
+  setText("p3-attend", a3.a);
+  setText("p3-total", `/${a3.b}`);
+  setBar("p3-bar", a3.pct);
+
+  setText("p1-streak", guessStreak(first));
+  setText("p2-streak", guessStreak(second));
+  setText("p3-streak", guessStreak(third));
+}
+  //List
   function renderCards(list) {
     const wrap = document.getElementById("rank-list");
     if (!wrap) return;
@@ -181,7 +301,7 @@ function setCurrentMonth() {
     const icon = document.getElementById("more-icon");
     if (!btn) return;
 
-    // 전체 멤버 10명 이하면 버튼 없음(원래 네 로직 유지)
+    //10명 이하
     if (all.length <= INITIAL_SHOW) {
       btn.style.display = "none";
       return;
@@ -199,7 +319,7 @@ function setCurrentMonth() {
   }
 
   function applyView() {
-    const rest = all.slice(3); // 4등부터 카드 리스트
+    const rest = all.slice(3); //4등부터 리스트
     if (all.length <= INITIAL_SHOW) expanded = true;
 
     const list = expanded ? rest : rest.slice(0, INITIAL_SHOW - 3); // 처음엔 4~10등만(7명)
