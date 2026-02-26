@@ -1,75 +1,468 @@
 <!DOCTYPE html>
-<html class="light" lang="ko">
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BINARY Elite Designer Editor v2</title>
+<link rel="stylesheet" href="/css/global.css" />
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/js/tailwind-config.js"></script>
+<script src="/js/components.js" defer></script>
 
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>BINARY Refined Post Editor</title>
-  <link rel="stylesheet" href="/css/global.css" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script src="/js/tailwind-config.js"></script>
-  <script src="/js/component.js"></script>
-  <style type="text/tailwindcss">
-    .formatting-btn {
-            @apply p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded transition-all duration-200 flex items-center justify-center;
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#22c55e",
+                        "primary-black": "#000000",
+                        "primary-hover": "#16a34a",
+                        "secondary-gray": "#6b7280",
+                        "border-light": "#e5e7eb",
+                        "background-light": "#ffffff",
+                        "emerald-brand": "#10B981",
+                        "emerald-dark": "#059669",
+                        "background-light": "#F5F7F8",
+                        "border-subtle": "#f3f4f6",
+                        "text-placeholder": "#d1d5db",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                    },
+                    boxShadow: {
+                        "subtle": "0 1px 2px rgba(0, 0, 0, 0.03)",
+                        "paper": "0 4px 30px rgba(0, 0, 0, 0.04), 0 10px 60px rgba(0, 0, 0, 0.02)",
+                        "dropdown": "0 10px 40px -10px rgba(0,0,0,0.08)",
+                        "glass": "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
+                    },
+                    maxWidth: {
+                        "editor": "850px",
+                    }
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+  #editor-body:empty:before {
+  content: attr(data-placeholder);
+  color: #d1d5db;
+}
+#editor-body h1 { font-size: 2.25rem; font-weight: 700; line-height: 1.2; }
+#editor-body h2 { font-size: 1.75rem; font-weight: 700; line-height: 1.25; }
+#editor-body h3 { font-size: 1.375rem; font-weight: 700; line-height: 1.3; }
+#editor-body blockquote { border-left: 3px solid #e5e7eb; padding-left: 12px; color: #6b7280; }
+#editor-body pre { background: #0b0b0b; color: #fff; padding: 12px; border-radius: 12px; overflow: auto; }
+        body {
+            @apply bg-background-light;
+        }
+        .formatting-btn {
+            @apply w-9 h-9 text-gray-400 hover:text-gray-900 hover:bg-black/5 rounded-lg flex items-center justify-center transition-all duration-200 relative;
         }
         .formatting-btn.active {
-            @apply text-gray-900 bg-gray-100;
+            @apply text-emerald-brand bg-emerald-50;
         }
         .separator {
             @apply w-px h-5 bg-gray-200 mx-1.5;
-        }
-        .editor-container {
-            @apply max-w-3xl mx-auto w-full h-full flex flex-col;
-        }textarea::-webkit-scrollbar {
+        }::-webkit-scrollbar {
             width: 6px;
         }
-        textarea::-webkit-scrollbar-track {
+        ::-webkit-scrollbar-track {
             background: transparent;
         }
-        textarea::-webkit-scrollbar-thumb {
-            background-color: #f3f4f6;
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.1);
             border-radius: 20px;
         }
-        textarea::-webkit-scrollbar-thumb:hover {
-            background-color: #e5e7eb;
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0,0,0,0.2);
         }
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
             font-size: 20px;
+        }.category-dropdown-trigger {
+            @apply flex items-center gap-2.5 px-5 py-2 text-sm font-medium rounded-full border border-gray-100 bg-white hover:border-emerald-200 hover:bg-emerald-50/20 hover:shadow-subtle transition-all cursor-pointer select-none text-emerald-brand;
+        }
+        .category-dropdown-menu {
+            @apply absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dropdown rounded-2xl overflow-hidden z-20 hidden group-hover:block transition-all duration-300 opacity-0 group-hover:opacity-100 transform origin-top-left;
+        }
+        .category-option {
+            @apply block px-5 py-3 text-sm text-gray-500 hover:bg-emerald-50/50 hover:text-gray-900 cursor-pointer flex items-center justify-between transition-colors;
+        }
+        .category-option.selected {
+            @apply text-emerald-brand bg-emerald-50/80 font-medium;
+        }.glass-toolbar {
+            @apply bg-white/80 backdrop-blur-md border border-gray-200/60 shadow-glass rounded-xl;
+        }.editor-title {
+            @apply text-6xl font-serif font-bold text-gray-900 placeholder:text-gray-200 border-none focus:ring-0 focus:outline-none p-0 bg-transparent tracking-tight leading-tight;
+        }
+        .editor-body {
+            @apply w-full flex-grow resize-none text-lg text-gray-700 placeholder:text-gray-300 border-none focus:ring-0 focus:outline-none p-0 bg-transparent leading-loose font-sans min-h-[60vh];
+        }
+        *:focus {
+            outline: none;
         }
     </style>
 </head>
+<body class="bg-background-light font-sans text-slate-900 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+<header class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 h-20 flex-none transition-all duration-300 border-b border-gray-100">
+<div class="w-full px-8 lg:px-16 h-full flex items-center justify-between max-w-[1600px] mx-auto">
+<div class="flex items-center flex-none w-48">
+<a class="text-black text-2xl font-bold tracking-tighter cursor-pointer hover:opacity-70 transition-opacity font-serif" href="#">BINARY</a>
+</div>
+<div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 glass-toolbar px-4 py-2">
+<div class="flex items-center gap-1">
+<button class="formatting-btn text-xs font-semibold" data-action="h1" title="Heading 1">H1</button>
+<button class="formatting-btn text-xs font-semibold" data-action="h2" title="Heading 2">H2</button>
+<button class="formatting-btn text-xs font-semibold" data-action="h3" title="Heading 3">H3</button>
+<div class="separator"></div>
+<button class="formatting-btn font-serif font-bold" data-action="bold" title="Bold">B</button>
+<button class="formatting-btn font-serif italic" data-action="italic" title="Italic">I</button>
+<button class="formatting-btn underline decoration-1 underline-offset-2" data-action="underline" title="Underline">U</button>
+<button class="formatting-btn line-through decoration-1" data-action="strike" title="Strikethrough">S</button>
 
-<body
-  class="bg-background-light font-sans text-slate-900 antialiased min-h-screen flex flex-col overflow-hidden selection:bg-gray-200">
-  <app-header></app-header>
-  <main class="flex-grow flex bg-[#fafafa] overflow-hidden relative w-full h-full justify-center">
-    <div class="w-full h-full flex flex-col items-center overflow-y-auto pt-10 pb-20 px-4">
-      <div
-        class="bg-white w-full max-w-[800px] min-h-[80vh] shadow-paper rounded-sm p-12 md:p-16 flex flex-col transition-all">
-        <input autofocus=""
-          class="w-full text-4xl md:text-5xl font-bold text-gray-900 placeholder:text-gray-200 border-none focus:ring-0 focus:outline-none p-0 mb-6 bg-transparent tracking-tight font-sans"
-          placeholder="Title" type="text" />
-        <div class="w-full h-px bg-gray-100 mb-8"></div>
-        <textarea
-          class="w-full flex-grow resize-none text-lg md:text-xl text-gray-700 font-serif placeholder:text-gray-300/80 placeholder:font-sans border-none focus:ring-0 focus:outline-none p-0 bg-transparent leading-relaxed"
-          placeholder="Start your story..."></textarea>
-      </div>
-      <div class="mt-8 text-xs text-gray-400 font-sans">
-        Type / for commands
-      </div>
-    </div>
-  </main>
-  <div
-    class="bg-white/95 backdrop-blur border-t border-border-subtle py-3 px-6 flex justify-around items-center md:hidden fixed bottom-0 w-full z-40 safe-area-pb">
-    <button class="formatting-btn active"><span class="material-symbols-outlined">format_bold</span></button>
-    <button class="formatting-btn"><span class="material-symbols-outlined">format_italic</span></button>
-    <button class="formatting-btn"><span class="material-symbols-outlined">add_photo_alternate</span></button>
-    <button class="formatting-btn"><span class="material-symbols-outlined">format_list_bulleted</span></button>
-    <button class="formatting-btn"><span class="material-symbols-outlined">keyboard_hide</span></button>
+<div class="separator"></div>
+<button class="formatting-btn" data-action="link" title="Link">
+  <span class="material-symbols-outlined !text-[18px]">link</span>
+</button>
+
+
+<button class="formatting-btn" data-action="image" title="Image Upload">
+  <span class="material-symbols-outlined !text-[18px]">add_photo_alternate</span>
+</button>
+<button class="formatting-btn" data-action="ul" title="Bullet List">
+  <span class="material-symbols-outlined !text-[18px]">format_list_bulleted</span>
+</button>
+
+</div>
+</div>
+<div class="flex items-center justify-end gap-8 flex-none w-48">
+<a class="text-sm text-gray-500 hover:text-gray-900 transition-colors cursor-pointer" href=".././index.html">Cancel</a>
+<button id="publish-btn"
+  class="bg-black hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-white text-sm font-medium h-10 px-6 rounded-full tracking-wide shadow-lg shadow-black/10">
+  Publish
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow flex bg-background-light overflow-hidden relative w-full h-full justify-center">
+<div class="w-full h-full flex flex-col items-center overflow-y-auto pt-8 pb-32 px-6 lg:px-0">
+<div class="w-full max-w-editor bg-white shadow-paper rounded-xl min-h-[900px] my-6 p-12 lg:p-16 flex flex-col relative transition-shadow hover:shadow-xl duration-500">
+<div class="mb-10 relative z-20 group inline-block self-start">
+<button class="category-dropdown-trigger group" type="button">
+<span class="text-gray-400 font-normal">Post in:</span>
+<span class="font-semibold text-emerald-brand">11th Gen</span>
+<span class="material-symbols-outlined !text-[18px] text-emerald-brand/70 group-hover:text-emerald-brand transition-colors">expand_more</span>
+</button>
+<div class="category-dropdown-menu hidden absolute top-full left-0 mt-3 w-64 bg-white border border-gray-100 shadow-lg rounded-2xl z-20">
+  <div class="py-2">
+  <div class="px-5 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+    Select Generation
   </div>
-  <app-footer></app-footer>
-</body>
 
-</html>
+  <a class="category-option selected" href="#">
+    <span>11th Gen</span>
+    <span class="material-symbols-outlined text-emerald-brand !text-[18px]">check_circle</span>
+  </a>
+
+  <a class="category-option" href="#">
+    <span>10th Gen</span>
+  </a>
+
+  <a class="category-option" href="#">
+    <span>Others</span>
+  </a>
+</div>
+
+</div>
+</div>
+<input autofocus="" class="editor-title mb-6" placeholder="Title..." type="text"/>
+<div class="w-20 h-px bg-gray-100 mb-12 ml-1"></div>
+<div id="editor-body"
+     class="editor-body"
+     contenteditable="true"
+     data-placeholder="Tell your story..."></div>
+<footer class="mt-16 border-t border-gray-50 pt-8 flex justify-between items-center text-xs text-gray-300 font-medium tracking-wide">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5 hover:text-gray-400 cursor-help transition-colors">
+<span class="material-symbols-outlined !text-[14px]">markdown</span>
+                        Markdown supported
+                    </span>
+</div>
+<div class="flex items-center gap-6">
+<span id="char-count">0 chars</span>
+<span>Last edit: Just now</span>
+</div>
+</footer>
+</div>
+</div>
+</main>
+<div class="lg:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-md z-40">
+<div class="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-2xl p-2 flex justify-between items-center px-4">
+<button class="formatting-btn" data-action="bold">
+  <span class="material-symbols-outlined">format_bold</span>
+</button>
+<button class="formatting-btn"><span class="material-symbols-outlined">format_italic</span></button>
+<button class="formatting-btn"><span class="material-symbols-outlined">link</span></button>
+<button class="formatting-btn"><span class="material-symbols-outlined">image</span></button>
+<div class="w-px h-6 bg-gray-200 mx-1"></div>
+<button class="formatting-btn"><span class="material-symbols-outlined">keyboard_hide</span></button>
+</div>
+</div>
+<input id="image-input" type="file" accept="image/*" class="hidden" />
+<script>
+(() => {
+  const editor = document.getElementById("editor-body");
+  const charCountEl = document.getElementById("char-count");
+  const imageInput = document.getElementById("image-input");
+  const toolbarButtons = document.querySelectorAll("[data-action]");
+
+  toolbarButtons.forEach(btn => {
+    btn.addEventListener("mousedown", (e) => e.preventDefault());
+  });
+
+  function focusEditor() { editor.focus(); }
+
+ function updateCharCount() {
+  const text = editor.innerText.replace(/\n/g, "");
+
+  // 공백 포함 글자 수
+  const withSpace = text.length;
+
+  if (charCountEl) charCountEl.textContent = `${withSpace} chars`;
+}
+  function isSelectionInsideEditor() {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return false;
+
+  const range = sel.getRangeAt(0);
+  let node = range.commonAncestorContainer;
+
+  // text node면 부모로 올림
+  if (node.nodeType === 3) node = node.parentNode;
+
+  return editor.contains(node);
+}
+
+function updateActiveStates() {
+  // 🔥 에디터 밖이면 active 전부 끔
+  if (!isSelectionInsideEditor()) {
+    toolbarButtons.forEach(btn => btn.classList.remove("active"));
+    return;
+  }
+
+  const states = {
+    bold: document.queryCommandState("bold"),
+    italic: document.queryCommandState("italic"),
+    underline: document.queryCommandState("underline"),
+    strike: document.queryCommandState("strikeThrough"),
+  };
+
+  toolbarButtons.forEach(btn => {
+    const action = btn.getAttribute("data-action");
+    if (action in states) btn.classList.toggle("active", !!states[action]);
+  });
+}
+  function toggleInline(action) {
+    focusEditor();
+    const map = { bold:"bold", italic:"italic", underline:"underline", strike:"strikeThrough" };
+    document.execCommand(map[action]);
+    updateActiveStates();
+    updateCharCount()
+  }
+
+  function setHeading(level) {
+  focusEditor();
+
+  const tag = `<${level.toLowerCase()}>`;
+  document.execCommand("formatBlock", false, tag);
+
+  updateActiveStates();
+  updateCharCount();
+}
+
+  function toggleList() {
+    focusEditor();
+    document.execCommand("insertUnorderedList");
+    updateCharCount()
+  }
+
+  function toggleQuote() {
+    focusEditor();
+    document.execCommand("formatBlock", false, "blockquote");
+    updateCharCount()
+  }
+
+  function toggleCodeBlock() {
+    focusEditor();
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+
+    const range = sel.getRangeAt(0);
+    const pre = document.createElement("pre");
+    const code = document.createElement("code");
+
+    if (range.collapsed) {
+      code.textContent = "\n";
+      pre.appendChild(code);
+      range.insertNode(pre);
+    } else {
+      code.appendChild(range.extractContents());
+      pre.appendChild(code);
+      range.insertNode(pre);
+    }
+    updateCharCount()
+  }
+
+  function insertLink() {
+    focusEditor();
+    const url = prompt("Enter URL (https://...)");
+    if (!url) return;
+    document.execCommand("createLink", false, url);
+  }
+
+  function insertImageFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      focusEditor();
+      document.execCommand("insertImage", false, reader.result);
+      updateCharCount()
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleAction(action) {
+    switch (action) {
+      case "bold":
+      case "italic":
+      case "underline":
+      case "strike":
+        return toggleInline(action);
+      case "h1": return setHeading("h1");
+      case "h2": return setHeading("h2");
+      case "h3": return setHeading("h3");
+      case "ul": return toggleList();
+      case "quote": return toggleQuote();
+      case "codeblock": return toggleCodeBlock();
+      case "link": return insertLink();
+      case "image": return imageInput.click();
+    }
+  }
+
+  toolbarButtons.forEach(btn => {
+    btn.addEventListener("click", () => handleAction(btn.getAttribute("data-action")));
+  });
+
+  imageInput.addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    insertImageFromFile(file);
+    imageInput.value = "";
+  });
+
+  editor.addEventListener("input", updateCharCount);
+  editor.addEventListener("keyup", updateActiveStates);
+  editor.addEventListener("mouseup", updateActiveStates);
+
+  updateCharCount()
+})();
+
+// 카테고리 선택 기능
+const categoryTrigger = document.querySelector(".category-dropdown-trigger");
+const categoryOptions = document.querySelectorAll(".category-option");
+const categoryLabel = categoryTrigger.querySelector("span.font-semibold");
+
+categoryOptions.forEach(option => {
+  option.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // 기존 selected 제거
+    categoryOptions.forEach(opt => {
+      opt.classList.remove("selected");
+      const check = opt.querySelector(".material-symbols-outlined");
+      if (check) check.remove();
+    });
+
+    // 현재 선택 적용
+    option.classList.add("selected");
+
+    const text = option.querySelector("span").innerText;
+    categoryLabel.innerText = text;
+
+    // 체크 아이콘 추가
+    const checkIcon = document.createElement("span");
+    checkIcon.className = "material-symbols-outlined text-emerald-brand !text-[18px]";
+    checkIcon.innerText = "check_circle";
+    option.appendChild(checkIcon);
+  });
+});
+
+const trigger = document.querySelector(".category-dropdown-trigger");
+const menu = document.querySelector(".category-dropdown-menu");
+
+trigger.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.classList.toggle("hidden");
+});
+
+document.addEventListener("click", (e) => {
+  if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+    menu.classList.add("hidden");
+  }
+});
+const publishBtn = document.getElementById("publish-btn");
+
+// 🔥 내일 서버 연결 시 이 함수만 수정하면 됨
+async function createBoard(data, token) {
+  return fetch("https://backend-production-5853.up.railway.app/api/v1/boards", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` })
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+publishBtn.addEventListener("click", async () => {
+  const title = document.querySelector(".editor-title").value.trim();
+  const content = document.getElementById("editor-body").innerHTML.trim();
+  const category = document
+    .querySelector(".category-option.selected span")
+    .innerText;
+
+  const token = localStorage.getItem("token");
+
+  if (!title) return alert("제목을 입력해주세요.");
+  if (!content) return alert("내용을 입력해주세요.");
+
+  const postData = {
+    title,
+    content,
+    category
+  };
+
+  console.log("보낼 데이터:", postData);
+
+  try {
+    const response = await createBoard(postData, token);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    alert("게시글이 저장되었습니다.");
+    window.location.href = "/board";
+
+  } catch (err) {
+    console.error("게시글 저장 실패:", err);
+    alert("저장 중 오류가 발생했습니다.");
+  }
+});
+</script>
+</body></html>

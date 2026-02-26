@@ -8,6 +8,10 @@ window.tailwind.config = {
         "secondary-gray": "#6b7280",
         "border-light": "#e5e7eb",
         "background-light": "#ffffff",
+        "emerald-brand": "#10B981",
+        "emerald-dark": "#059669",
+        "border-subtle": "#f3f4f6",
+        "text-placeholder": "#d1d5db",
         "level-0": "#f1f5f9", "level-1": "#d1fae5", "level-2": "#6ee7b7", "level-3": "#34d399", "level-4": "#10b981", "level-5": "#047857",
       },
       fontFamily: {
