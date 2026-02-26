@@ -11,7 +11,7 @@ window.tailwind.config = {
         "level-0": "#f1f5f9", "level-1": "#d1fae5", "level-2": "#6ee7b7", "level-3": "#34d399", "level-4": "#10b981", "level-5": "#047857",
       },
       fontFamily: {
-        "display": ["Inter", "Space Grotesk", "Pretendard", "sans-serif"],
+        "display": ["Space Grotesk", "Pretendard", "sans-serif"],
         "body": ["Inter", "Pretendard", "sans-serif"],
         "sans": ["Inter", "Pretendard", "sans-serif"],
         "mono": ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
