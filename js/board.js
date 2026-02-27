@@ -5,12 +5,24 @@ const BoardPage = (() => {
   let _cache = null;
   let _bound = false;
 
-  async function fetchAllPosts() {
-    if (_cache) return _cache;
-    const res = await fetch("../data/posts.json");
-    _cache = await res.json();
-    return _cache;
-  }
+ async function fetchAllPosts() {
+  if (_cache) return _cache;
+
+  const res = await fetch("https://backend-production-5853.up.railway.app/api/v1/boards");  // 🔥 서버 주소로 변경
+  const data = await res.json();
+
+  _cache = {
+    items: (data.question_list || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      category: item.category,
+      date: item.created_at?.slice(0, 10), 
+      author: "익명" // 🔥 아직 author 없으니까 임시
+    }))
+  };
+
+  return _cache;
+}
 
   function getState() {
     const u = new URL(location.href);
@@ -63,7 +75,7 @@ const BoardPage = (() => {
         <td class="py-4 px-6">${badge(p.category)}</td>
         <td class="py-4 px-6">
           <a class="text-sm font-medium text-black group-hover:text-green-700 transition-colors block"
-             href="./post.html?id=${encodeURIComponent(p.id)}">
+             href="./post/index.html?id=${encodeURIComponent(p.id)}">
             ${escapeHTML(p.title)}
           </a>
         </td>
@@ -242,6 +254,25 @@ const BoardPage = (() => {
         if (e.key === "Enter") go({ ...state, page: 1, q: search.value.trim() });
       });
     }
+
+     const writeBtn = document.getElementById("write-btn");
+
+  if (writeBtn) {
+    writeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/login/index.html";
+        return;
+      }
+
+      window.location.href = "../board/write/index.html";
+    });
+  }
+
 const searchBtn = document.getElementById("search-btn");
 if (search && searchBtn) {
   searchBtn.addEventListener("click", (e) => {
@@ -287,6 +318,7 @@ if (search && searchBtn) {
     const state = getState();
     go({ ...state, page: p });
   }
+  
 
   return { init, goto };
 })();
