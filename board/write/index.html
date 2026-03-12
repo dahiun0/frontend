@@ -266,6 +266,7 @@ function updateActiveStates() {
     italic: document.queryCommandState("italic"),
     underline: document.queryCommandState("underline"),
     strike: document.queryCommandState("strikeThrough"),
+    ul: document.queryCommandState("insertUnorderedList") // 이 줄 추가
   };
 
   toolbarButtons.forEach(btn => {
@@ -291,11 +292,18 @@ function updateActiveStates() {
   updateCharCount();
 }
 
-  function toggleList() {
-    focusEditor();
+ function toggleList() {
+  focusEditor();
+
+  if (editor.innerHTML.trim() === "") {
+    editor.innerHTML = "<ul><li><br></li></ul>";
+  } else {
     document.execCommand("insertUnorderedList");
-    updateCharCount()
   }
+
+  updateActiveStates();
+  updateCharCount();
+}
 
   function toggleQuote() {
     focusEditor();
