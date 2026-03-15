@@ -38,7 +38,8 @@ const me = await meRes.json();
 localStorage.setItem(
   "user",
   JSON.stringify({
-    name: me.name
+    name: me.name,
+    id: me.id
   })
 );
 

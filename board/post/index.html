@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>BINARY - Post Detail</title>
-<link rel="stylesheet" href="../../css/global.css" />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="../../js/tailwind-config.js"></script>
-<script src="../../js/components.js" defer></script>
-</head>
-<body class="bg-white text-text-main min-h-screen flex flex-col font-body">
-<app-header></app-header>
-<main class="flex-grow w-full max-w-[800px] mx-auto px-4 sm:px-6 py-12 md:py-20">
-<article class="bg-transparent overflow-hidden">
-<div class="text-left mb-12">
 
-       <div class="mb-6">
- <span id="post-generation"
-  class="inline-flex items-center px-3 py-1 rounded-full 
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>BINARY - Post Detail</title>
+  <link rel="stylesheet" href="../../css/global.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="../../js/tailwind-config.js"></script>
+  <script src="../../js/components.js" defer></script>
+</head>
+
+<body class="bg-white text-text-main min-h-screen flex flex-col font-body">
+  <app-header></app-header>
+  <main class="flex-grow w-full max-w-[800px] mx-auto px-4 sm:px-6 py-12 md:py-20">
+    <article class="bg-transparent overflow-hidden">
+      <div class="text-left mb-12">
+
+        <div class="mb-6">
+          <span id="post-generation" class="inline-flex items-center px-3 py-1 rounded-full 
          text-xs font-semibold 
          bg-emerald-100 text-emerald-600 
          tracking-wide uppercase">
-</span>
-</div>
+          </span>
+        </div>
 
 
         <h1 id="post-title"
@@ -31,88 +31,78 @@
         </h1>
 
 
-       <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-between mt-4">
 
-  <!-- 작성자 + 날짜 -->
-  <div class="flex items-center gap-4 text-sm text-gray-500 font-sans">
-    <div class="flex items-center gap-2">
-      <span id="post-author"
-        class="font-semibold text-gray-900">
-      </span>
+          <!-- 작성자 + 날짜 -->
+          <div class="flex items-center gap-4 text-sm text-gray-500 font-sans">
+            <div class="flex items-center gap-2">
+              <span id="post-author" class="font-semibold text-gray-900">
+              </span>
 
-      <span class="text-gray-400">•</span>
+              <span class="text-gray-400">•</span>
 
-      <span id="post-date"
-        class="text-gray-500">
-      </span>
-    </div>
-  </div>
+              <span id="post-date" class="text-gray-500">
+              </span>
+            </div>
+          </div>
 
-  <!-- 수정 / 삭제 버튼 (기본 숨김) -->
-  <div id="post-actions" class="hidden flex items-center gap-3">
+          <!-- 수정 / 삭제 버튼 (기본 숨김) -->
+          <div id="post-actions" class="hidden flex items-center gap-3">
 
-<button id="edit-btn" class="p-2 rounded-lg hover:bg-gray-100 transition">
-<svg xmlns="http://www.w3.org/2000/svg"
-     class="w-6 h-6"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="2"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-  <path d="M12 20h9"/>
-  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-</svg>
-</button>
+            <button id="edit-btn" class="p-2 rounded-lg hover:bg-gray-100 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+            </button>
 
- <button id="delete-btn" class="p-2 rounded-lg hover:bg-gray-100 transition">
-<svg xmlns="http://www.w3.org/2000/svg"
-     class="w-6 h-6"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="2"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-  <path d="M3 6h18"/>
-  <path d="M8 6V4h8v2"/>
-  <path d="M19 6l-1 14H6L5 6"/>
-  <path d="M10 11v6"/>
-  <path d="M14 11v6"/>
-</svg>
-</button>
-</div>
+            <button id="delete-btn" class="p-2 rounded-lg hover:bg-gray-100 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18" />
+                <path d="M8 6V4h8v2" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+              </svg>
+            </button>
+          </div>
 
-</div>
+        </div>
 
       </div>
 
 
-      <div id="post-content"
-        class="prose prose-lg prose-slate max-w-none text-gray-700 font-sans">
+      <div id="post-content" class="prose prose-lg prose-slate max-w-none text-gray-700 font-sans">
       </div>
 
     </article>
-<div class="mt-16 pt-8 border-t border-gray-100 dark:border-white/5 flex justify-between items-center">
-<button id="btn-prev"
-class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transition-colors text-sm font-medium font-sans disabled:opacity-40 disabled:cursor-not-allowed">
-<span class="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
-<span class="hidden sm:inline">Previous</span>
-</button>
-<a class="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary text-gray-600 dark:text-gray-300 hover:text-neutral-dark font-sans font-medium py-2 px-6 rounded-lg transition-all duration-200 text-sm" href="../index.html">
-            All Posts
-        </a>
-<button id="btn-next"
-class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transition-colors text-sm font-medium font-sans disabled:opacity-40 disabled:cursor-not-allowed">
-<span class="hidden sm:inline">Next</span>
-<span class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
-</button>
-</div>
+    <div class="mt-16 pt-8 border-t border-gray-100 dark:border-white/5 flex justify-between items-center">
+      <button id="btn-prev"
+        class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transition-colors text-sm font-medium font-sans disabled:opacity-40 disabled:cursor-not-allowed">
+        <span
+          class="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
+        <span class="hidden sm:inline">Previous</span>
+      </button>
+      <a class="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary text-gray-600 dark:text-gray-300 hover:text-neutral-dark font-sans font-medium py-2 px-6 rounded-lg transition-all duration-200 text-sm"
+        href="../">
+        All Posts
+      </a>
+      <button id="btn-next"
+        class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transition-colors text-sm font-medium font-sans disabled:opacity-40 disabled:cursor-not-allowed">
+        <span class="hidden sm:inline">Next</span>
+        <span
+          class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
+      </button>
+    </div>
 
-</main>
-<app-footer></app-footer>
+  </main>
+  <app-footer></app-footer>
 
-</footer>
-<script src="../../js/post.js"></script>
+  </footer>
+  <script src="../../js/post.js"></script>
 
-</body></html>
+</body>
+
+</html>

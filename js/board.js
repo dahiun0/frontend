@@ -86,7 +86,7 @@ else {
         <td class="py-4 px-6">${badge(p.category)}</td>
         <td class="py-4 px-6">
           <a class="text-sm font-medium text-black group-hover:text-green-700 transition-colors block"
-             href="./post/index.html?id=${encodeURIComponent(p.id)}">
+             href="./post/?id=${encodeURIComponent(p.id)}">
             ${escapeHTML(p.title)}
           </a>
         </td>
@@ -276,11 +276,11 @@ else if (state.category !== "all") {
 
       if (!token) {
         alert("로그인이 필요합니다.");
-        window.location.href = "/login/index.html";
+        window.location.href = "/login/";
         return;
       }
 
-      window.location.href = "../board/write/index.html";
+      window.location.href = "../board/write/";
     });
   }
 
