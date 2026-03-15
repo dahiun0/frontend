@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("loginUser:", loginUser);
     console.log("postUser:", data.user);
 
-    if (token && loginUser && loginUser.name === data.user?.name) {
+    if (token && loginUser && loginUser.id === data.user?.id) {
       document.getElementById("post-actions").classList.remove("hidden");
     }
 
