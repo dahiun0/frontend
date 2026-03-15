@@ -117,7 +117,7 @@
 <header class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 h-20 flex-none transition-all duration-300 border-b border-gray-100">
 <div class="w-full px-8 lg:px-16 h-full flex items-center justify-between max-w-[1600px] mx-auto">
 <div class="flex items-center flex-none w-48">
-<a class="text-black text-2xl font-bold tracking-tighter cursor-pointer hover:opacity-70 transition-opacity font-serif" href="#">BINARY</a>
+<a class="text-black text-2xl font-bold tracking-tighter cursor-pointer hover:opacity-70 transition-opacity font-serif" href="../index.html">BINARY</a>
 </div>
 <div class="hidden lg:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 glass-toolbar px-4 py-2">
 <div class="flex items-center gap-1">
@@ -169,18 +169,17 @@
     Select Generation
   </div>
 
-  <a class="category-option selected" href="#">
-    <span>11th Gen</span>
-    <span class="material-symbols-outlined text-emerald-brand !text-[18px]">check_circle</span>
-  </a>
+  <a class="category-option selected" data-value="11기" href="#">
+  <span>11th Gen</span>
+</a>
 
-  <a class="category-option" href="#">
-    <span>10th Gen</span>
-  </a>
+<a class="category-option" data-value="10기" href="#">
+  <span>10th Gen</span>
+</a>
 
-  <a class="category-option" href="#">
-    <span>Others</span>
-  </a>
+<a class="category-option" data-value="Others" href="#">
+  <span>Others</span>
+</a>
 </div>
 
 </div>
@@ -221,94 +220,133 @@
 </div>
 <input id="image-input" type="file" accept="image/*" class="hidden" />
 <script>
+
+const params = new URLSearchParams(window.location.search);
+const postId = params.get("id");
+
+
+if (postId) loadPost(postId);
+
+async function loadPost(id) {
+  try {
+    const res = await fetch(`https://backend-production-5853.up.railway.app/api/v1/boards/${id}`);
+    const data = await res.json();
+
+    document.querySelector(".editor-title").value = data.title;
+    document.getElementById("editor-body").innerHTML = data.content;
+
+    const categoryLabel =
+      document.querySelector(".category-dropdown-trigger span.font-semibold");
+
+    categoryLabel.innerText = data.category;
+
+  } catch (err) {
+    console.error(err);
+    alert("게시글 불러오기 실패");
+  }
+}
+
 (() => {
+
   const editor = document.getElementById("editor-body");
   const charCountEl = document.getElementById("char-count");
   const imageInput = document.getElementById("image-input");
   const toolbarButtons = document.querySelectorAll("[data-action]");
 
-  toolbarButtons.forEach(btn => {
-    btn.addEventListener("mousedown", (e) => e.preventDefault());
-  });
+  toolbarButtons.forEach(btn =>
+    btn.addEventListener("mousedown", e => e.preventDefault())
+  );
 
-  function focusEditor() { editor.focus(); }
+  const focusEditor = () => editor.focus();
 
- function updateCharCount() {
-  const text = editor.innerText.replace(/\n/g, "");
-
-  
-  const withSpace = text.length;
-
-  if (charCountEl) charCountEl.textContent = `${withSpace} chars`;
-}
-  function isSelectionInsideEditor() {
-  const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return false;
-
-  const range = sel.getRangeAt(0);
-  let node = range.commonAncestorContainer;
-
-
-  if (node.nodeType === 3) node = node.parentNode;
-
-  return editor.contains(node);
-}
-
-function updateActiveStates() {
-
-  if (!isSelectionInsideEditor()) {
-    toolbarButtons.forEach(btn => btn.classList.remove("active"));
-    return;
+  function updateCharCount() {
+    const text = editor.innerText.replace(/\n/g, "");
+    if (charCountEl) charCountEl.textContent = `${text.length} chars`;
   }
 
-  const states = {
-    bold: document.queryCommandState("bold"),
-    italic: document.queryCommandState("italic"),
-    underline: document.queryCommandState("underline"),
-    strike: document.queryCommandState("strikeThrough"),
-  };
+  function isSelectionInsideEditor() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return false;
 
-  toolbarButtons.forEach(btn => {
-    const action = btn.getAttribute("data-action");
-    if (action in states) btn.classList.toggle("active", !!states[action]);
-  });
-}
+    let node = sel.getRangeAt(0).commonAncestorContainer;
+    if (node.nodeType === 3) node = node.parentNode;
+
+    return editor.contains(node);
+  }
+
+  function updateActiveStates() {
+
+    if (!isSelectionInsideEditor()) {
+      toolbarButtons.forEach(btn => btn.classList.remove("active"));
+      return;
+    }
+
+    const states = {
+      bold: document.queryCommandState("bold"),
+      italic: document.queryCommandState("italic"),
+      underline: document.queryCommandState("underline"),
+      strike: document.queryCommandState("strikeThrough"),
+      ul: document.queryCommandState("insertUnorderedList")
+    };
+
+    toolbarButtons.forEach(btn => {
+      const action = btn.dataset.action;
+      if (action in states) btn.classList.toggle("active", !!states[action]);
+    });
+  }
+
   function toggleInline(action) {
+
     focusEditor();
-    const map = { bold:"bold", italic:"italic", underline:"underline", strike:"strikeThrough" };
+
+    const map = {
+      bold: "bold",
+      italic: "italic",
+      underline: "underline",
+      strike: "strikeThrough"
+    };
+
     document.execCommand(map[action]);
     updateActiveStates();
-    updateCharCount()
+    updateCharCount();
   }
 
   function setHeading(level) {
-  focusEditor();
-
-  const tag = `<${level.toLowerCase()}>`;
-  document.execCommand("formatBlock", false, tag);
-
-  updateActiveStates();
-  updateCharCount();
-}
+    focusEditor();
+    document.execCommand("formatBlock", false, `<${level}>`);
+    updateActiveStates();
+    updateCharCount();
+  }
 
   function toggleList() {
+
     focusEditor();
-    document.execCommand("insertUnorderedList");
-    updateCharCount()
+
+    if (editor.innerHTML.trim() === "") {
+      editor.innerHTML = "<ul><li><br></li></ul>";
+    } else {
+      document.execCommand("insertUnorderedList");
+    }
+
+    updateActiveStates();
+    updateCharCount();
   }
 
   function toggleQuote() {
     focusEditor();
     document.execCommand("formatBlock", false, "blockquote");
-    updateCharCount()
+    updateCharCount();
   }
 
   function toggleCodeBlock() {
+
     focusEditor();
+
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
 
     const range = sel.getRangeAt(0);
+
     const pre = document.createElement("pre");
     const code = document.createElement("code");
 
@@ -321,51 +359,76 @@ function updateActiveStates() {
       pre.appendChild(code);
       range.insertNode(pre);
     }
-    updateCharCount()
+
+    updateCharCount();
   }
 
   function insertLink() {
+
     focusEditor();
+
     const url = prompt("Enter URL (https://...)");
     if (!url) return;
+
     document.execCommand("createLink", false, url);
   }
 
   function insertImageFromFile(file) {
+
     const reader = new FileReader();
+
     reader.onload = () => {
       focusEditor();
       document.execCommand("insertImage", false, reader.result);
-      updateCharCount()
+      updateCharCount();
     };
+
     reader.readAsDataURL(file);
   }
 
   function handleAction(action) {
+
     switch (action) {
+
       case "bold":
       case "italic":
       case "underline":
       case "strike":
         return toggleInline(action);
-      case "h1": return setHeading("h1");
-      case "h2": return setHeading("h2");
-      case "h3": return setHeading("h3");
-      case "ul": return toggleList();
-      case "quote": return toggleQuote();
-      case "codeblock": return toggleCodeBlock();
-      case "link": return insertLink();
-      case "image": return imageInput.click();
+
+      case "h1":
+      case "h2":
+      case "h3":
+        return setHeading(action);
+
+      case "ul":
+        return toggleList();
+
+      case "quote":
+        return toggleQuote();
+
+      case "codeblock":
+        return toggleCodeBlock();
+
+      case "link":
+        return insertLink();
+
+      case "image":
+        return imageInput.click();
     }
   }
 
-  toolbarButtons.forEach(btn => {
-    btn.addEventListener("click", () => handleAction(btn.getAttribute("data-action")));
-  });
+  toolbarButtons.forEach(btn =>
+    btn.addEventListener("click", () =>
+      handleAction(btn.dataset.action)
+    )
+  );
 
-  imageInput.addEventListener("change", (e) => {
-    const file = e.target.files && e.target.files[0];
+  imageInput.addEventListener("change", e => {
+
+    const file = e.target.files?.[0];
     if (!file) return;
+
     insertImageFromFile(file);
     imageInput.value = "";
   });
@@ -374,101 +437,150 @@ function updateActiveStates() {
   editor.addEventListener("keyup", updateActiveStates);
   editor.addEventListener("mouseup", updateActiveStates);
 
-  updateCharCount()
+  updateCharCount();
+
 })();
 
-// 카테고리 선택
+
+//카테고리
 const categoryTrigger = document.querySelector(".category-dropdown-trigger");
 const categoryOptions = document.querySelectorAll(".category-option");
-const categoryLabel = categoryTrigger.querySelector("span.font-semibold");
+const categoryLabel =
+  categoryTrigger.querySelector("span.font-semibold");
 
 categoryOptions.forEach(option => {
-  option.addEventListener("click", (e) => {
+
+  option.addEventListener("click", e => {
+
     e.preventDefault();
 
-
     categoryOptions.forEach(opt => {
+
       opt.classList.remove("selected");
+
       const check = opt.querySelector(".material-symbols-outlined");
       if (check) check.remove();
     });
-
 
     option.classList.add("selected");
 
     const text = option.querySelector("span").innerText;
     categoryLabel.innerText = text;
 
-
     const checkIcon = document.createElement("span");
-    checkIcon.className = "material-symbols-outlined text-emerald-brand !text-[18px]";
+
+    checkIcon.className =
+      "material-symbols-outlined text-emerald-brand !text-[18px]";
+
     checkIcon.innerText = "check_circle";
+
     option.appendChild(checkIcon);
   });
+
 });
+
 
 const trigger = document.querySelector(".category-dropdown-trigger");
 const menu = document.querySelector(".category-dropdown-menu");
 
-trigger.addEventListener("click", (e) => {
+trigger.addEventListener("click", e => {
   e.stopPropagation();
   menu.classList.toggle("hidden");
 });
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", e => {
   if (!menu.contains(e.target) && !trigger.contains(e.target)) {
     menu.classList.add("hidden");
   }
 });
+
+
 const publishBtn = document.getElementById("publish-btn");
-
-
-async function createBoard(data, token) {
-  return fetch("https://backend-production-5853.up.railway.app/api/v1/boards", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` })
-    },
-    body: JSON.stringify(data)
-  });
+if (postId) {
+  publishBtn.textContent = "Update";
 }
 
+async function createBoard(data, token) {
+
+  return fetch(
+    "https://backend-production-5853.up.railway.app/api/v1/boards",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: JSON.stringify(data)
+    }
+  );
+}
+
+
 publishBtn.addEventListener("click", async () => {
-  const title = document.querySelector(".editor-title").value.trim();
-  const content = document.getElementById("editor-body").innerHTML.trim();
-  const category = document
-    .querySelector(".category-option.selected span")
-    .innerText;
+
+  const title =
+    document.querySelector(".editor-title").value.trim();
+
+  const content =
+    document.getElementById("editor-body").innerHTML.trim();
+
+  const category =
+    document.querySelector(".category-option.selected span").innerText;
 
   const token = localStorage.getItem("token");
 
   if (!title) return alert("제목을 입력해주세요.");
   if (!content) return alert("내용을 입력해주세요.");
 
-  const postData = {
-    title,
-    content,
-    category
-  };
-
-  console.log("보낼 데이터:", postData);
+  const postData = { title, content, category };
 
   try {
-    const response = await createBoard(postData, token);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
+    let response;
+
+    if (postId) {
+
+      response = await fetch(
+        `https://backend-production-5853.up.railway.app/api/v1/boards/${postId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(postData)
+        }
+      );
+
+    } else {
+
+      response = await createBoard(postData, token);
+
     }
 
-    alert("게시글이 저장되었습니다.");
+    if (!response.ok) {
+
+      const errorText = await response.text();
+      throw new Error(errorText);
+
+    }
+
+    alert(
+      postId
+        ? "게시글이 수정되었습니다."
+        : "게시글이 저장되었습니다."
+    );
+
     window.location.href = "/board";
 
   } catch (err) {
-    console.error("게시글 저장 실패:", err);
+
+    console.error(err);
     alert("저장 중 오류가 발생했습니다.");
+
   }
+
 });
+
 </script>
 </body></html>

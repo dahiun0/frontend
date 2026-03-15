@@ -38,6 +38,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("post-actions").classList.remove("hidden");
     }
 
+    const editBtn = document.getElementById("edit-btn");
+
+if (editBtn) {
+  editBtn.addEventListener("click", () => {
+    window.location.href = `../write/index.html?id=${id}`;
+  });
+}
+
     //삭제버튼
     const deleteBtn = document.getElementById("delete-btn");
 

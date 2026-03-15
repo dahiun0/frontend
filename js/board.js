@@ -53,10 +53,21 @@ const BoardPage = (() => {
 
   function badge(cat) {
   const raw = (cat || "").trim();
-
   if (!raw) return "";
 
-  return `<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+  let color = "bg-gray-100 text-gray-700";
+
+if (raw === "11기") {
+  color = "bg-emerald-50 text-emerald-600";
+} 
+else if (raw === "10기") {
+  color = "bg-violet-50 text-violet-600";
+} 
+else {
+  color = "bg-sky-50 text-sky-600";
+}
+
+  return `<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${color}">
     ${escapeHTML(raw)}
   </span>`;
 }
