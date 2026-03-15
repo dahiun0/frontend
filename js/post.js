@@ -29,12 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("post-content").innerHTML =
       data.content;
 
-    const loginUser = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+    let loginUser = null;
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) loginUser = JSON.parse(userStr);
+    } catch (e) {
+      console.error("User JSON parse error:", e);
+    }
 
     console.log("loginUser:", loginUser);
     console.log("postUser:", data.user);
 
-    if (loginUser && loginUser.name === data.user?.name) {
+    if (token && loginUser && loginUser.name === data.user?.name) {
       document.getElementById("post-actions").classList.remove("hidden");
     }
 
