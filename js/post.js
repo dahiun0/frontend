@@ -22,6 +22,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("post-generation").innerText =
       data.category;
 
+     const genEl = document.getElementById("post-generation");
+genEl.innerText = data.category;
+
+const gen = data.category;
+
+if (gen.includes("11")) {
+  genEl.classList.add("bg-emerald-50", "text-emerald-600");
+}
+else if (gen.includes("10")) {
+  genEl.classList.add("bg-violet-50", "text-violet-600");
+}
+else {
+  genEl.classList.add("bg-sky-50", "text-sky-600");
+}
     const date = new Date(data.created_at);
     document.getElementById("post-date").innerText =
       date.toLocaleDateString();

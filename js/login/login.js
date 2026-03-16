@@ -38,11 +38,10 @@ const me = await meRes.json();
 localStorage.setItem(
   "user",
   JSON.stringify({
-    name: me.name,
-    id: me.id
+    id: me.id,
+    name: me.name
   })
 );
-
 
     alert("로그인 성공!");
     window.location.href = "/";

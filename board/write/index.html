@@ -93,8 +93,8 @@
             @apply flex items-center gap-2.5 px-5 py-2 text-sm font-medium rounded-full border border-gray-100 bg-white hover:border-emerald-200 hover:bg-emerald-50/20 hover:shadow-subtle transition-all cursor-pointer select-none text-emerald-brand;
         }
         .category-dropdown-menu {
-            @apply absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dropdown rounded-2xl overflow-hidden z-20 hidden group-hover:block transition-all duration-300 opacity-0 group-hover:opacity-100 transform origin-top-left;
-        }
+  @apply absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dropdown rounded-2xl overflow-hidden z-20 transition-all duration-300 transform origin-top-left;
+}
         .category-option {
             @apply block px-5 py-3 text-sm text-gray-500 hover:bg-emerald-50/50 hover:text-gray-900 cursor-pointer flex items-center justify-between transition-colors;
         }
@@ -463,7 +463,17 @@
 
       option.addEventListener("click", e => {
 
-        e.preventDefault();
+//카테고리
+const trigger = document.querySelector(".category-dropdown-trigger");
+const menu = document.querySelector(".category-dropdown-menu");
+const categoryOptions = document.querySelectorAll(".category-option");
+const categoryLabel =
+  trigger.querySelector("span.font-semibold");
+
+trigger.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.classList.toggle("hidden");
+});
 
         categoryOptions.forEach(opt => {
 
@@ -473,10 +483,8 @@
           if (check) check.remove();
         });
 
-        option.classList.add("selected");
-
-        const text = option.querySelector("span").innerText;
-        categoryLabel.innerText = text;
+    categoryOptions.forEach(opt => {
+      opt.classList.remove("selected");
 
         const checkIcon = document.createElement("span");
 
@@ -485,33 +493,17 @@
 
         checkIcon.innerText = "check_circle";
 
-        option.appendChild(checkIcon);
-      });
+    const checkIcon = document.createElement("span");
+    checkIcon.className =
+      "material-symbols-outlined text-emerald-brand !text-[18px]";
+    checkIcon.innerText = "check_circle";
 
-    });
+    option.appendChild(checkIcon);
 
+    menu.classList.add("hidden");
+  });
 
-    const trigger = document.querySelector(".category-dropdown-trigger");
-    const menu = document.querySelector(".category-dropdown-menu");
-
-    trigger.addEventListener("click", e => {
-      e.stopPropagation();
-      menu.classList.toggle("hidden");
-    });
-
-    document.addEventListener("click", e => {
-      if (!menu.contains(e.target) && !trigger.contains(e.target)) {
-        menu.classList.add("hidden");
-      }
-    });
-
-
-    const publishBtn = document.getElementById("publish-btn");
-    if (postId) {
-      publishBtn.textContent = "Update";
-    }
-
-    async function createBoard(data, token) {
+});
 
       return fetch(
         "https://backend-production-5853.up.railway.app/api/v1/boards",
