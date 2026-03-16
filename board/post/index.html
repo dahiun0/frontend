@@ -9,6 +9,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="../../js/tailwind-config.js"></script>
 <script src="../../js/components.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="bg-white text-text-main min-h-screen flex flex-col font-body">
 <app-header></app-header>
@@ -19,16 +20,14 @@
        <div class="mb-6">
  <span id="post-generation"
   class="inline-flex items-center px-3 py-1 rounded-full 
-         text-xs font-semibold 
-         bg-emerald-100 text-emerald-600 
+         text-xs font-semibold  
          tracking-wide uppercase">
 </span>
 </div>
 
-
-        <h1 id="post-title"
-          class="font-display text-4xl sm:text-5xl md:text-5xl font-bold leading-tight text-gray-900 mb-6 tracking-tight">
-        </h1>
+<h1 id="post-title"
+class="text-4xl sm:text-5xl md:text-5xl font-bold leading-tight text-gray-900 mb-6 tracking-tight tabular-nums">
+</h1>
 
 
        <div class="flex items-center justify-between mt-4">
@@ -99,9 +98,10 @@ class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transitio
 <span class="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
 <span class="hidden sm:inline">Previous</span>
 </button>
-<a class="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary text-gray-600 dark:text-gray-300 hover:text-neutral-dark font-sans font-medium py-2 px-6 rounded-lg transition-all duration-200 text-sm" href="../index.html">
-            All Posts
-        </a>
+<a class="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 hover:border-gray-300 text-gray-600 dark:text-gray-300 hover:text-gray-900 font-sans font-medium py-2 px-6 rounded-lg transition-all duration-200 text-sm"
+href="../index.html">
+All Posts
+</a>
 <button id="btn-next"
 class="group flex items-center gap-3 text-gray-500 hover:text-gray-900 transition-colors text-sm font-medium font-sans disabled:opacity-40 disabled:cursor-not-allowed">
 <span class="hidden sm:inline">Next</span>

@@ -91,8 +91,8 @@
             @apply flex items-center gap-2.5 px-5 py-2 text-sm font-medium rounded-full border border-gray-100 bg-white hover:border-emerald-200 hover:bg-emerald-50/20 hover:shadow-subtle transition-all cursor-pointer select-none text-emerald-brand;
         }
         .category-dropdown-menu {
-            @apply absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dropdown rounded-2xl overflow-hidden z-20 hidden group-hover:block transition-all duration-300 opacity-0 group-hover:opacity-100 transform origin-top-left;
-        }
+  @apply absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-xl border border-gray-100 shadow-dropdown rounded-2xl overflow-hidden z-20 transition-all duration-300 transform origin-top-left;
+}
         .category-option {
             @apply block px-5 py-3 text-sm text-gray-500 hover:bg-emerald-50/50 hover:text-gray-900 cursor-pointer flex items-center justify-between transition-colors;
         }
@@ -163,7 +163,7 @@
 <span class="font-semibold text-emerald-brand">11th Gen</span>
 <span class="material-symbols-outlined !text-[18px] text-emerald-brand/70 group-hover:text-emerald-brand transition-colors">expand_more</span>
 </button>
-<div class="category-dropdown-menu hidden absolute top-full left-0 mt-3 w-64 bg-white border border-gray-100 shadow-lg rounded-2xl z-20">
+<div class="category-dropdown-menu absolute top-full left-0 mt-3 w-64 bg-white border border-gray-100 shadow-lg rounded-2xl z-20">
   <div class="py-2">
   <div class="px-5 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
     Select Generation
@@ -443,10 +443,17 @@ async function loadPost(id) {
 
 
 //카테고리
-const categoryTrigger = document.querySelector(".category-dropdown-trigger");
+// 카테고리
+const trigger = document.querySelector(".category-dropdown-trigger");
+const menu = document.querySelector(".category-dropdown-menu");
 const categoryOptions = document.querySelectorAll(".category-option");
 const categoryLabel =
-  categoryTrigger.querySelector("span.font-semibold");
+  trigger.querySelector("span.font-semibold");
+
+trigger.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.classList.toggle("hidden");
+});
 
 categoryOptions.forEach(option => {
 
@@ -455,7 +462,6 @@ categoryOptions.forEach(option => {
     e.preventDefault();
 
     categoryOptions.forEach(opt => {
-
       opt.classList.remove("selected");
 
       const check = opt.querySelector(".material-symbols-outlined");
@@ -468,30 +474,15 @@ categoryOptions.forEach(option => {
     categoryLabel.innerText = text;
 
     const checkIcon = document.createElement("span");
-
     checkIcon.className =
       "material-symbols-outlined text-emerald-brand !text-[18px]";
-
     checkIcon.innerText = "check_circle";
 
     option.appendChild(checkIcon);
+
+    menu.classList.add("hidden");
   });
 
-});
-
-
-const trigger = document.querySelector(".category-dropdown-trigger");
-const menu = document.querySelector(".category-dropdown-menu");
-
-trigger.addEventListener("click", e => {
-  e.stopPropagation();
-  menu.classList.toggle("hidden");
-});
-
-document.addEventListener("click", e => {
-  if (!menu.contains(e.target) && !trigger.contains(e.target)) {
-    menu.classList.add("hidden");
-  }
 });
 
 
