@@ -48,7 +48,7 @@ class AppHeader extends HTMLElement {
         <a href="/mypage" class="flex items-center justify-center px-6 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all shadow-md hover:shadow-lg font-body">
           <span>MYPAGE</span>
         </a>
-        <button onclick="localStorage.removeItem('token'); location.reload();"
+        <button onclick="localStorage.removeItem('token'); localStorage.removeItem('user'); location.reload();"
           class="flex items-center justify-center px-3 py-2 rounded-lg text-gray-500 hover:text-black text-sm font-bold transition-all font-body md:flex hidden">
           Logout
         </button>

@@ -43,20 +43,27 @@ else {
     document.getElementById("post-content").innerHTML =
       data.content;
 
-    const loginUser = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+    let loginUser = null;
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) loginUser = JSON.parse(userStr);
+    } catch (e) {
+      console.error("User JSON parse error:", e);
+    }
 
     console.log("loginUser:", loginUser);
     console.log("postUser:", data.user);
 
-   if (loginUser && loginUser.id === data.user?.id) {
-  document.getElementById("post-actions").classList.remove("hidden");
-}
+    if (token && loginUser && loginUser.id === data.user?.id) {
+      document.getElementById("post-actions").classList.remove("hidden");
+    }
 
     const editBtn = document.getElementById("edit-btn");
 
 if (editBtn) {
   editBtn.addEventListener("click", () => {
-    window.location.href = `../write/index.html?id=${id}`;
+    window.location.href = `../write/?id=${id}`;
   });
 }
 
@@ -88,7 +95,7 @@ if (editBtn) {
 
         alert("삭제되었습니다.");
 
-        window.location.href = "../index.html";
+        window.location.href = "../";
 
       } catch (err) {
         console.error(err);
@@ -114,7 +121,7 @@ const nextPost = posts[index - 1];
 //previous버튼
 if (prevPost) {
   prevBtn.onclick = () => {
-    window.location.href = `./index.html?id=${prevPost.id}`;
+    window.location.href = `./?id=${prevPost.id}`;
   };
 } else {
 prevBtn.classList.remove("hover:text-gray-900");
@@ -125,7 +132,7 @@ prevBtn.onclick = null;
 //next버튼
 if (nextPost) {
   nextBtn.onclick = () => {
-    window.location.href = `./index.html?id=${nextPost.id}`;
+    window.location.href = `./?id=${nextPost.id}`;
   };
 } else {
  nextBtn.classList.remove("hover:text-gray-900");
