@@ -5,24 +5,26 @@ const BoardPage = (() => {
   let _cache = null;
   let _bound = false;
 
- async function fetchAllPosts() {
-  if (_cache) return _cache;
+  async function fetchAllPosts() {
+    if (_cache) return _cache;
 
-  const res = await fetch("https://backend-production-5853.up.railway.app/api/v1/boards");  // 🔥 서버 주소로 변경
-  const data = await res.json();
+    const res = await fetch(
+      "https://backend-production-5853.up.railway.app/api/v1/boards"
+    );
+    const data = await res.json();
 
-  _cache = {
-    items: (data.question_list || []).map(item => ({
-      id: item.id,
-      title: item.title,
-      category: (item.category || "").replace("th Gen", "기"),
-      date: item.created_at?.slice(0, 10), 
-      author: item.user?.name || "익명"
-    }))
-  };
+    _cache = {
+      items: (data.question_list || []).map((item) => ({
+        id: item.id,
+        title: item.title,
+        category: (item.category || "").replace("th Gen", "기"),
+        date: item.created_at?.slice(0, 10),
+        author: item.user?.name || "익명",
+      })),
+    };
 
-  return _cache;
-}
+    return _cache;
+  }
 
   function getState() {
     const u = new URL(location.href);
@@ -52,36 +54,34 @@ const BoardPage = (() => {
   }
 
   function badge(cat) {
-  const raw = (cat || "").trim();
-  if (!raw) return "";
+    const raw = (cat || "").trim();
+    if (!raw) return "";
 
-  let color = "bg-gray-100 text-gray-700";
+    let color = "bg-gray-100 text-gray-700";
 
-if (raw === "11기") {
-  color = "bg-emerald-50 text-emerald-600";
-} 
-else if (raw === "10기") {
-  color = "bg-violet-50 text-violet-600";
-} 
-else {
-  color = "bg-sky-50 text-sky-600";
-}
+    if (raw === "11기") {
+      color = "bg-emerald-50 text-emerald-600";
+    } else if (raw === "10기") {
+      color = "bg-violet-50 text-violet-600";
+    } else {
+      color = "bg-sky-50 text-sky-600";
+    }
 
-  return `<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${color}">
+    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${color}">
     ${escapeHTML(raw)}
   </span>`;
-}
+  }
 
- function renderRows(items, startIndex) {
-  const tbody = document.getElementById("post-tbody");
-  if (!tbody) return;
+  function renderRows(items, startIndex, totalCount) {
+    const tbody = document.getElementById("post-tbody");
+    if (!tbody) return;
 
-  tbody.innerHTML = items
-    .map(
-      (p, i) => `
+    tbody.innerHTML = items
+      .map(
+        (p, i) => `
       <tr class="hover:bg-primary/5 transition-colors group cursor-pointer">
         <td class="py-4 px-6 text-sm text-gray-400 text-center font-mono">
-          ${items.length - (startIndex + i)}
+          ${totalCount - (startIndex + i)}
         </td>
         <td class="py-4 px-6">${badge(p.category)}</td>
         <td class="py-4 px-6">
@@ -96,9 +96,9 @@ else {
         )}</td>
       </tr>
     `
-    )
-    .join("");
-}
+      )
+      .join("");
+  }
   function renderPagination(page, totalPages) {
     const prev = document.getElementById("btn-prev");
     const next = document.getElementById("btn-next");
@@ -216,17 +216,14 @@ else {
     const data = await fetchAllPosts();
     let items = (data.items || []).slice();
 
- if (state.category === "etc") {
-  items = items.filter(x => {
-    const c = (x.category || "");
-    return c !== "11기" && c !== "10기";
-  });
-}
-else if (state.category !== "all") {
-  items = items.filter(x =>
-    (x.category || "") === state.category
-  );
-}
+    if (state.category === "etc") {
+      items = items.filter((x) => {
+        const c = x.category || "";
+        return c !== "11기" && c !== "10기";
+      });
+    } else if (state.category !== "all") {
+      items = items.filter((x) => (x.category || "") === state.category);
+    }
 
     if (state.q) {
       const q = state.q.toLowerCase();
@@ -245,7 +242,7 @@ else if (state.category !== "all") {
     const start = (page - 1) * PAGE_SIZE;
     const pageItems = items.slice(start, start + PAGE_SIZE);
 
-    renderRows(pageItems, start);
+    renderRows(pageItems, start, items.length);
     renderPagination(page, totalPages);
 
     document.title = `BINARY Board - Page ${page} of ${totalPages}`;
@@ -260,37 +257,37 @@ else if (state.category !== "all") {
     if (search) {
       search.value = state.q;
 
-  
       search.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") go({ ...state, page: 1, q: search.value.trim() });
+        if (e.key === "Enter")
+          go({ ...state, page: 1, q: search.value.trim() });
       });
     }
 
-     const writeBtn = document.getElementById("write-btn");
+    const writeBtn = document.getElementById("write-btn");
 
-  if (writeBtn) {
-    writeBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+    if (writeBtn) {
+      writeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
 
-      const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        window.location.href = "/login/";
-        return;
-      }
+        if (!token) {
+          alert("로그인이 필요합니다.");
+          window.location.href = "/login/";
+          return;
+        }
 
-      window.location.href = "../board/write/";
-    });
-  }
+        window.location.href = "../board/write/";
+      });
+    }
 
-const searchBtn = document.getElementById("search-btn");
-if (search && searchBtn) {
-  searchBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    go({ ...getState(), page: 1, q: search.value.trim() });
-  });
-}
+    const searchBtn = document.getElementById("search-btn");
+    if (search && searchBtn) {
+      searchBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        go({ ...getState(), page: 1, q: search.value.trim() });
+      });
+    }
 
     const filterButtons = document.querySelectorAll("button[data-filter]");
 
@@ -303,12 +300,10 @@ if (search && searchBtn) {
 
           const nextCategory = (btn.dataset.filter || "all").toLowerCase();
 
-         
           const u = new URL(location.href);
           u.searchParams.set("page", "1");
           u.searchParams.set("category", nextCategory);
 
-          
           const q = getState().q;
           if (q) u.searchParams.set("q", q);
           else u.searchParams.delete("q");
@@ -329,7 +324,5 @@ if (search && searchBtn) {
     const state = getState();
     go({ ...state, page: p });
   }
-  
-
   return { init, goto };
 })();
